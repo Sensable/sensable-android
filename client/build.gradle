@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+    }
+}
+
+apply plugin: 'android'
+
+android {
+    buildToolsVersion "19.1.0"
+    compileSdkVersion 19
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile project(':library')
+    }
+    compile 'com.android.support:appcompat-v7:19.+'
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}

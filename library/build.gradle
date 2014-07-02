@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+    }
+}
+
+apply plugin: 'android-library'
+
+android {
+    buildToolsVersion "19.1.0"
+    compileSdkVersion 19
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile 'com.android.support:support-v4:19.1.0'
+        compile 'com.squareup.retrofit:retrofit:1.6.0'
+        compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+        compile 'com.squareup.okhttp:okhttp:2.0.0'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
