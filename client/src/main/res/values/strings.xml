@@ -11,7 +11,7 @@
     <string name="sensable_samples">Samples:</string>
     <string name="sensable_timestamp">Timestamp:</string>
     <string name="sensable_value">Value:</string>
-    <string name="title_activity_saved_sensables">Favourite Sensables</string>
+    <string name="title_activity_saved_sensables">Sensables</string>
     <string name="button_list_sensables">List All Sensables</string>
     <string name="button_save_sensables">Favourite</string>
     <string name="button_unsave_sensables">Unfavourite</string>
