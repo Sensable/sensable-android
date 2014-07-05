@@ -8,6 +8,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="io.sensable.client.SensableActivity">
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_save_sensables"
+            android:id="@+id/favourite_sensables_button" />
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_unsave_sensables"
+            android:id="@+id/unfavourite_sensables_button" />
 
     <TextView
             android:text="@string/sensable_id"

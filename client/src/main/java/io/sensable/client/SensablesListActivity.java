@@ -80,23 +80,4 @@ public class SensablesListActivity extends FragmentActivity {
         });
     }
 
-    /**
-     * Called when the user clicks the Send button
-     */
-    public void sendMessage(View view) {
-        FragmentManager fm = getFragmentManager();
-        CreateSensableFragment createSensableFragment = new CreateSensableFragment();
-        createSensableFragment.setCreateSensableListener(new CreateSensableFragment.CreateSensableListener() {
-            @Override
-            public void onConfirmed(SensableSender sensableSender) {
-                Toast.makeText(SensablesListActivity.this, sensableSender.getSensable(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        createSensableFragment.show(fm, "create_sensable_name");
-    }
-
-    //onlistviewclick
-    //create intent
-    //add sensable as extra
-
 }

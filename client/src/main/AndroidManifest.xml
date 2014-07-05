@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.sensable.client"
-    android:versionCode="1"
-    android:versionName="1.0.0" >
+          package="io.sensable.client"
+          android:versionCode="1"
+          android:versionName="1.0.0">
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="19" />
+            android:minSdkVersion="14"
+            android:targetSdkVersion="20"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.Light.DarkActionBar" >
+            android:label="@string/app_name"
+            android:allowBackup="true"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
+        <provider
+                android:name="io.sensable.client.sqlite.SensableContentProvider"
+                android:authorities="io.sensable.client.contentprovider"
+                android:exported="false">
+        </provider>
         <activity
-            android:name="io.sensable.client.SensablesListActivity"
-            android:label="@string/app_name" >
+                android:name="io.sensable.client.SensablesListActivity"
+                android:label="@string/title_activity_all_sensables">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name="io.sensable.client.SensorListActivity"
+                android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name="io.sensable.client.SensableActivity"
+                android:label="@string/title_activity_sensable">
+        </activity>
+        <activity
+                android:name="io.sensable.client.SavedSensablesActivity"
+                android:label="@string/title_activity_saved_sensables">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity
-            android:name="io.sensable.client.SensorListActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="io.sensable.client.SensableActivity"
-            android:label="@string/title_activity_sensable" >
         </activity>
     </application>
 

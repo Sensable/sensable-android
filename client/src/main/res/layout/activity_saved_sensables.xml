@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+        >
+    <TextView
+            android:id="@+id/text_no_favourite"
+            android:text="@string/no_favourites"
+            android:layout_width="fill_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+    <ListView
+            android:id="@+id/saved_sensable_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_list_sensors"
+            android:onClick="listSensors" />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_list_sensables"
+            android:onClick="showAllSensables" />
+</LinearLayout>
