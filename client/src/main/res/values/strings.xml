@@ -15,7 +15,7 @@
     <string name="button_list_sensables">List All Sensables</string>
     <string name="button_save_sensables">Favourite</string>
     <string name="button_unsave_sensables">Unfavourite</string>
-    <string name="no_favourites">You haven\'t favourited any Sensables yet.</string>
+    <string name="no_favourites">You have no favourite Sensables.</string>
     <string name="title_activity_all_sensables">All sensables</string>
 
 </resources>
