@@ -10,9 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 import io.sensable.SensableService;
 import io.sensable.client.sqlite.SavedSensablesTable;
@@ -24,8 +23,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 
 public class SensableActivity extends Activity {
@@ -36,7 +34,11 @@ public class SensableActivity extends Activity {
     private TextView sensableId;
     private TextView sensableUnit;
     private TextView sensableLocation;
-    private ListView sensableSamples;
+
+    ExpandableListAdapter mExpandableListAdapter;
+    ExpandableListView sensableSamples;
+    List<String> listDataHeader = new ArrayList<String>();
+    HashMap<String, List<String>> listDataChild = new HashMap<String, List<String>>();
 
     private Boolean savedLocally;
 
@@ -45,9 +47,6 @@ public class SensableActivity extends Activity {
     private Button unFavouriteButton;
 
     private ArrayList<Sample> mSamples;
-    private ArrayAdapter<Sample> mListArrayAdapter;
-
-    private SensableContentProvider sensableContentProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +58,20 @@ public class SensableActivity extends Activity {
         sensableId = (TextView) findViewById(R.id.sensable_id_field);
         sensableUnit = (TextView) findViewById(R.id.sensable_unit_field);
         sensableLocation = (TextView) findViewById(R.id.sensable_location_field);
-        sensableSamples = (ListView) findViewById(R.id.sensable_samples);
 
 
         mSamples = new ArrayList<Sample>(Arrays.asList(sensable.getSamples()));
-        mListArrayAdapter = new ArrayAdapter<Sample>(SensableActivity.this, android.R.layout.simple_list_item_1, mSamples);
-        sensableSamples.setAdapter(mListArrayAdapter);
+
+        // get the listview
+        sensableSamples = (ExpandableListView) findViewById(R.id.lvExp);
+
+        // preparing list data
+        prepareListData();
+
+        mExpandableListAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
+
+        // setting list adapter
+        sensableSamples.setAdapter(mExpandableListAdapter);
 
         savedLocally = checkSavedLocally();
 
@@ -148,7 +155,7 @@ public class SensableActivity extends Activity {
 
     // Returns the DB URI for this sensable
     private Uri getDatabaseUri() {
-        return Uri.parse(SensableContentProvider.CONTENT_URI.toString()+"/"+sensable.getSensorid());
+        return Uri.parse(SensableContentProvider.CONTENT_URI.toString() + "/" + sensable.getSensorid());
     }
 
     @Override
@@ -184,12 +191,13 @@ public class SensableActivity extends Activity {
 
         mSamples.clear();
         mSamples.addAll(new ArrayList<Sample>(Arrays.asList(sensable.getSamples())));
-        mListArrayAdapter.notifyDataSetChanged();
+        prepareListData();
+        mExpandableListAdapter.notifyDataSetChanged();
         updateSaveButton();
     }
 
     public void updateSaveButton() {
-        if(savedLocally) {
+        if (savedLocally) {
             favouriteButton.setVisibility(View.GONE);
             unFavouriteButton.setVisibility(View.VISIBLE);
         } else {
@@ -216,5 +224,55 @@ public class SensableActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * Preparing the list data
+     */
+    private void prepareListData() {
+        listDataHeader.clear();//
+        listDataChild.clear();//
+
+        // Reverse the order of samples so they are by timestamp desc
+        Collections.sort(mSamples, new Comparator<Sample>() {
+            @Override
+            public int compare(Sample a, Sample b) {
+                return (int) (b.getTimestamp() - a.getTimestamp());
+            }
+        });
+
+        List<ArrayList<String>> currentListList = new ArrayList<ArrayList<String>>();
+        currentListList.add(new ArrayList<String>());
+
+//        List<String> currentList = new ArrayList<String>();
+        String thisDayName;
+        Calendar cal = Calendar.getInstance();
+        for (int i = 0; i < mSamples.size() - 1; i++) {
+            int currentIndex = currentListList.size()-1;
+            Date thisSampleDate = new Date(mSamples.get(i).getTimestamp());
+            Date nextSampleDate = new Date(mSamples.get(i + 1).getTimestamp());
+
+            cal.setTime(thisSampleDate);
+            Integer thisDay = cal.get(Calendar.DAY_OF_YEAR);
+
+            currentListList.get(currentIndex).add(cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+//            currentList.add(cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+
+            cal.setTime(nextSampleDate);
+            int nextDay = cal.get(Calendar.DAY_OF_YEAR);
+            if (thisDay != nextDay) {
+                cal.setTime(thisSampleDate);
+                thisDayName = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+                listDataHeader.add(thisDayName);
+                listDataChild.put(thisDayName, currentListList.get(currentIndex)); // Header, Child data
+//                currentList.clear();
+                currentListList.add(new ArrayList<String>());
+            }
+        }
+        // Add final group
+        thisDayName = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+        listDataHeader.add(thisDayName);
+        listDataChild.put(thisDayName, currentListList.get(currentListList.size()-1)); // Header, Child data
+
     }
 }

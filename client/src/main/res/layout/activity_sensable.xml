@@ -50,8 +50,16 @@
             android:text="@string/sensable_samples"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    <ListView
+    <!--ListView
             android:id="@+id/sensable_samples"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content"></ListView-->
+    <!--io.sensable.client.views.ExpandableSamplesList
+            android:id="@+id/sensable_samples"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/-->
+    <ExpandableListView
+            android:id="@+id/lvExp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
 </LinearLayout>
