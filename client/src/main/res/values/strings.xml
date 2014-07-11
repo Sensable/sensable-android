@@ -17,5 +17,6 @@
     <string name="button_unsave_sensables">Unfavourite</string>
     <string name="no_favourites">You have no favourite Sensables.</string>
     <string name="title_activity_all_sensables">All sensables</string>
+    <string name="dialogTitleCreateSensable">Create a Sensable</string>
 
 </resources>

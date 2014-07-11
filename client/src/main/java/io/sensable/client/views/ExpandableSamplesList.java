@@ -7,7 +7,7 @@ import android.view.View;
 /**
  * Created by simonmadine on 06/07/2014.
  */
-public class ExpandableSamplesList  extends View {
+public class ExpandableSamplesList extends View {
     public ExpandableSamplesList(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }

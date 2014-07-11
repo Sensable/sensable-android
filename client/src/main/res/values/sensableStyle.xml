@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="SensableStyle" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="SensableStyle" parent="@android:Theme.Holo.Light">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:windowBackground">@color/mainBackground</item>
@@ -9,10 +9,18 @@
         <item name="android:actionBarStyle">@style/SensableActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTitleBackgroundStyle">@color/titleBackground</item>
+        <item name="android:dialogTheme">@style/SensableDialogTheme</item>
     </style>
+
     <!-- ActionBar styles -->
      <style name="SensableActionBar"
-           parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+           parent="@android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/titleBackground</item>
     </style>
+
+    <style name="SensableDialogTheme" parent="@android:Theme.Holo.Dialog">
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textColorHint">@color/dialogTextColor</item>
+    </style>
+
 </resources>

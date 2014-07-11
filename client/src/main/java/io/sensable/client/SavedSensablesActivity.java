@@ -2,27 +2,17 @@ package io.sensable.client;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.app.LoaderManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
-import io.sensable.SensableService;
 import io.sensable.client.sqlite.SavedSensablesTable;
 import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.Sensable;
 import io.sensable.model.SensableSender;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class SavedSensablesActivity extends Activity {
@@ -37,7 +27,7 @@ public class SavedSensablesActivity extends Activity {
 
         final ListView sensableList = (ListView) findViewById(R.id.saved_sensable_list);
         attachDatabaseToList(sensableList);
-        final TextView emptyText = (TextView)findViewById(R.id.text_no_favourite);
+        final TextView emptyText = (TextView) findViewById(R.id.text_no_favourite);
         sensableList.setEmptyView(emptyText);
 
         //add onclick to ListView

@@ -39,6 +39,8 @@ public class CreateSensableFragment extends DialogFragment {
         sensorList = sensorManager.getSensorList(Sensor.TYPE_ALL);
         View view = inflater.inflate(R.layout.create_sensable_layout, null);
 
+        getDialog().setTitle(getActivity().getString(R.string.dialogTitleCreateSensable));
+
         List<String> listSensorType = new ArrayList<String>();
         for(int i=0; i<sensorList.size(); i++){
             listSensorType.add(sensorList.get(i).getName());

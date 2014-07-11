@@ -244,11 +244,10 @@ public class SensableActivity extends Activity {
         List<ArrayList<String>> currentListList = new ArrayList<ArrayList<String>>();
         currentListList.add(new ArrayList<String>());
 
-//        List<String> currentList = new ArrayList<String>();
         String thisDayName;
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < mSamples.size() - 1; i++) {
-            int currentIndex = currentListList.size()-1;
+            int currentIndex = currentListList.size() - 1;
             Date thisSampleDate = new Date(mSamples.get(i).getTimestamp());
             Date nextSampleDate = new Date(mSamples.get(i + 1).getTimestamp());
 
@@ -256,7 +255,6 @@ public class SensableActivity extends Activity {
             Integer thisDay = cal.get(Calendar.DAY_OF_YEAR);
 
             currentListList.get(currentIndex).add(cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-//            currentList.add(cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
 
             cal.setTime(nextSampleDate);
             int nextDay = cal.get(Calendar.DAY_OF_YEAR);
@@ -265,14 +263,13 @@ public class SensableActivity extends Activity {
                 thisDayName = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
                 listDataHeader.add(thisDayName);
                 listDataChild.put(thisDayName, currentListList.get(currentIndex)); // Header, Child data
-//                currentList.clear();
                 currentListList.add(new ArrayList<String>());
             }
         }
         // Add final group
         thisDayName = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
         listDataHeader.add(thisDayName);
-        listDataChild.put(thisDayName, currentListList.get(currentListList.size()-1)); // Header, Child data
+        listDataChild.put(thisDayName, currentListList.get(currentListList.size() - 1)); // Header, Child data
 
     }
 }
