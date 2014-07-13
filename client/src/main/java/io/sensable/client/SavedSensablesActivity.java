@@ -2,7 +2,9 @@ package io.sensable.client;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,12 +15,21 @@ import io.sensable.client.sqlite.SavedSensablesTable;
 import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.Sensable;
 import io.sensable.model.SensableSender;
+import io.sensable.model.UserLogin;
 
 
 public class SavedSensablesActivity extends Activity {
 
     private static final String TAG = SavedSensablesActivity.class.getSimpleName();
     public final static String EXTRA_SENSABLE = "io.sensable.sensable";
+
+    public SensableUser sensableUser;
+
+    //define callback interface
+    public interface CallbackInterface {
+
+        void loginStatusUpdate(Boolean loggedIn);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +51,15 @@ public class SavedSensablesActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        sensableUser = new SensableUser(sharedPref, this);
+        if(sensableUser.loggedIn) {
+            Toast.makeText(SavedSensablesActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(SavedSensablesActivity.this, "Not logged In", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -70,24 +90,29 @@ public class SavedSensablesActivity extends Activity {
         createSensableFragment.show(fm, "create_sensable_name");
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.saved_sensables, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    /**
+     * Called when the user clicks the Send button
+     */
+    public void loginDialog() {
+        FragmentManager fm = getFragmentManager();
+        SensableLoginFragment sensableLoginFragment = new SensableLoginFragment ();
+        sensableLoginFragment.setSensableLoginListener(new SensableLoginFragment.SensableLoginListener() {
+            @Override
+            public void onConfirmed(UserLogin userLogin) {
+                sensableUser.login(userLogin, new CallbackInterface() {
+                    @Override
+                    public void loginStatusUpdate(Boolean loggedIn) {
+                        if(loggedIn) {
+                            Toast.makeText(SavedSensablesActivity.this, "Successfully logged In", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(SavedSensablesActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                        }
+                        invalidateOptionsMenu();
+                    }
+                });
+            }
+        });
+        sensableLoginFragment.show(fm, "sensable_login_name");
     }
 
     private void attachDatabaseToList(ListView listView) {
@@ -115,5 +140,44 @@ public class SavedSensablesActivity extends Activity {
             SavedSensablesTable.COLUMN_LOCATION_LONGITUDE,
             SavedSensablesTable.COLUMN_UNIT
     };
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.saved_sensables, menu);
+        if(sensableUser.loggedIn) {
+            menu.findItem(R.id.action_login).setVisible(false);
+            menu.findItem(R.id.action_logout).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_login).setVisible(true);
+            menu.findItem(R.id.action_logout).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_login) {
+            loginDialog();
+        } else if (id == R.id.action_logout) {
+            sensableUser.deleteSavedUser(new CallbackInterface() {
+                @Override
+                public void loginStatusUpdate(Boolean loggedIn) {
+                    if(!loggedIn) {
+                        Toast.makeText(SavedSensablesActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SavedSensablesActivity.this, "Logout failed", Toast.LENGTH_SHORT).show();
+                    }
+                    invalidateOptionsMenu();
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

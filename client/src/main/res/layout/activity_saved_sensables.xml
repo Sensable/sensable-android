@@ -11,6 +11,7 @@
             android:visibility="gone"
             android:layout_height="wrap_content"/>
     <ListView
+            style="@style/SensableTextView"
             android:id="@+id/saved_sensable_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />

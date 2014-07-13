@@ -18,5 +18,14 @@
     <string name="no_favourites">You have no favourite Sensables.</string>
     <string name="title_activity_all_sensables">All sensables</string>
     <string name="dialogTitleCreateSensable">Create a Sensable</string>
+    <string name="preference_file_key">io.sensable.client.PREFERENCES_FILE</string>
+    <string name="saved_username">SAVED_USERNAME</string>
+    <string name="saved_email">SAVED_EMAIL</string>
+    <string name="saved_access_token">SAVED_ACCESS_TOKEN</string>
+    <string name="action_login">Log in</string>
+    <string name="action_logout">Log out</string>
+    <string name="dialogTitleSensableLogin">Log into Sensables</string>
+    <string name="sensable_username">Username</string>
+    <string name="sensable_password">Password</string>
 
 </resources>
