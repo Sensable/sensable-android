@@ -4,12 +4,12 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:windowBackground">@color/mainBackground</item>
-        <item name="android:textColor">@color/textColor</item>
         <item name="android:typeface">normal</item>
         <item name="android:actionBarStyle">@style/SensableActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTitleBackgroundStyle">@color/titleBackground</item>
         <item name="android:dialogTheme">@style/SensableDialogTheme</item>
+        <item name="android:panelFullBackground">@android:color/darker_gray</item>
     </style>
 
     <!-- ActionBar styles -->
@@ -21,6 +21,13 @@
     <style name="SensableDialogTheme" parent="@android:Theme.Holo.Dialog">
         <item name="android:textColor">@color/textColor</item>
         <item name="android:textColorHint">@color/dialogTextColor</item>
+    </style>
+
+    <style name="SensableTextView" parent="@android:style/TextAppearance.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>
