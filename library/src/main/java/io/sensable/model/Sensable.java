@@ -52,7 +52,11 @@ public class Sensable implements Parcelable {
 
     @Override
     public String toString() {
-        return this.getSensorid() + " - " + this.getSamples()[0].getValue() + this.getUnit();
+        if(this.getSamples().length > 0) {
+            return this.getSensorid() + " - " + this.getSamples()[0].getValue() + this.getUnit();
+        } else {
+            return this.getSensorid() + " - " + this.getUnit();
+        }
     }
 
     @Override
@@ -68,8 +72,7 @@ public class Sensable implements Parcelable {
         dest.writeString(unit);
     }
 
-    public static final Parcelable.Creator<Sensable> CREATOR
-            = new Parcelable.Creator<Sensable>() {
+    public static final Parcelable.Creator<Sensable> CREATOR = new Parcelable.Creator<Sensable>() {
         public Sensable createFromParcel(Parcel in) {
             return new Sensable(in);
         }

@@ -84,7 +84,7 @@ public class SavedSensablesActivity extends Activity {
         createSensableFragment.setCreateSensableListener(new CreateSensableFragment.CreateSensableListener() {
             @Override
             public void onConfirmed(SensableSender sensableSender) {
-                Toast.makeText(SavedSensablesActivity.this, sensableSender.getSensable(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SavedSensablesActivity.this, sensableSender.getSensable().toString(), Toast.LENGTH_SHORT).show();
             }
         });
         createSensableFragment.show(fm, "create_sensable_name");

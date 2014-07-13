@@ -4,15 +4,14 @@ package io.sensable.model;
  * Created by madine on 01/07/14.
  */
 public class SensableSender {
-    private String sensable; //Will be type 'Sensable'
+    private Sensable sensable; //Will be type 'Sensable'
     private int interval;
 
-
-    public String getSensable() {
+    public Sensable getSensable() {
         return sensable;
     }
 
-    public void setSensable(String sensable) {
+    public void setSensable(Sensable sensable) {
         this.sensable = sensable;
     }
 

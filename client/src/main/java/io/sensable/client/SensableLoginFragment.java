@@ -64,9 +64,13 @@ public class SensableLoginFragment extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                UserLogin userLogin = new UserLogin(loginUsername.getText().toString(), loginPassword.getText().toString());
-                sensableLoginListener.onConfirmed(userLogin);
-                dismiss();
+                if(loginUsername.getText().toString().length() > 0 && loginPassword.getText().toString().length() > 0) {
+                    UserLogin userLogin = new UserLogin(loginUsername.getText().toString(), loginPassword.getText().toString());
+                    sensableLoginListener.onConfirmed(userLogin);
+                    dismiss();
+                } else {
+                    Toast.makeText(getActivity(), "Username and password required", Toast.LENGTH_SHORT).show();
+                }
             }
 
         });
