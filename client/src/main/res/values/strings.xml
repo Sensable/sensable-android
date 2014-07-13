@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Sensable</string>
-    <string name="button_list_sensors">Show Sensors</string>
+    <string name="button_list_sensors">Create Sensable</string>
     <string name="title_activity_sensable">SensableActivity</string>
     <string name="action_settings">Settings</string>
     <string name="sensable_id">Sensable ID:</string>
