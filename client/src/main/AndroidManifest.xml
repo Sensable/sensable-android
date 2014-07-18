@@ -15,9 +15,15 @@
             android:allowBackup="true"
             android:icon="@drawable/icon"
             android:theme="@style/SensableStyle">
+        <service android:name="io.sensable.client.scheduler.ScheduledSensableService" />
         <provider
                 android:name="io.sensable.client.sqlite.SensableContentProvider"
                 android:authorities="io.sensable.client.contentprovider"
+                android:exported="false">
+        </provider>
+        <provider
+                android:name="io.sensable.client.sqlite.ScheduledSensableContentProvider"
+                android:authorities="io.sensable.client.scheduledcontentprovider"
                 android:exported="false">
         </provider>
         <activity

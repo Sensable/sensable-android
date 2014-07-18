@@ -9,6 +9,10 @@ import android.os.Parcelable;
 public class Sample implements Parcelable {
     private long timestamp;
     private double value;
+//    private double[] location;
+
+    public Sample() {
+    }
 
     public long getTimestamp() {
         return timestamp;
@@ -58,4 +62,11 @@ public class Sample implements Parcelable {
         return this.getTimestamp() + ": " + this.getValue();
     }
 
+//    public double[] getLocation() {
+//        return location;
+//    }
+
+//    public void setLocation(double[] location) {
+//        this.location = location;
+//    }
 }

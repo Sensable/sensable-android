@@ -42,12 +42,16 @@ public class SensableDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         SavedSensablesTable.onCreate(db);
+        ScheduledSensablesTable.onCreate(db);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         SavedSensablesTable.onUpgrade(db, oldVersion, newVersion);
+        ScheduledSensablesTable.onUpgrade(db, oldVersion, newVersion);
     }
 
 }

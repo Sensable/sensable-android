@@ -1,8 +1,6 @@
 package io.sensable;
 
-import io.sensable.model.Sensable;
-import io.sensable.model.User;
-import io.sensable.model.UserLogin;
+import io.sensable.model.*;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -12,7 +10,7 @@ import retrofit.http.Path;
 import java.util.List;
 
 /**
- * Created by madine on 01/07/14.
+ * Acts as the interface between the application and the REST API
  */
 public interface SensableService {
     @GET("/sensable")
@@ -20,6 +18,12 @@ public interface SensableService {
 
     @GET("/sensable")
     List<Sensable> listSensables();
+
+    @POST("/sensable")
+    void saveSample(@Body SensableSender sensableSender, Callback<SampleResponse> cb);
+
+    @POST("/sensable")
+    SampleResponse saveSample(@Body SensableSender sensableSender);
 
     @GET("/sensed/{id}")
     void getSensorData(@Path("id") String id, Callback<Sensable> cb);

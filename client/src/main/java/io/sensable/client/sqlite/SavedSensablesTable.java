@@ -23,7 +23,8 @@ public class SavedSensablesTable {
             + COLUMN_LOCATION_LATITUDE + " real not null, "
             + COLUMN_LOCATION_LONGITUDE + " real not null, "
             + COLUMN_SENSOR_ID + " text unique not null, "
-            + COLUMN_UNIT + " text not null" + ");";
+            + COLUMN_UNIT + " text not null"
+            + ");";
 
 
     public static void onCreate(SQLiteDatabase database) {
@@ -36,13 +37,13 @@ public class SavedSensablesTable {
         onCreate(database);
     }
 
-    public static ContentValues serializeChannelForSqlLite(Sensable sensable) {
-        ContentValues serializedChannel = new ContentValues();
-        serializedChannel.put(COLUMN_LOCATION_LATITUDE, sensable.getLocation()[0]);
-        serializedChannel.put(COLUMN_LOCATION_LONGITUDE, sensable.getLocation()[1]);
-        serializedChannel.put(COLUMN_SENSOR_ID, sensable.getSensorid());
-        serializedChannel.put(COLUMN_UNIT, sensable.getUnit());
-        return serializedChannel;
+    public static ContentValues serializeSensableForSqlLite(Sensable sensable) {
+        ContentValues serializedSensable = new ContentValues();
+        serializedSensable.put(COLUMN_LOCATION_LATITUDE, sensable.getLocation()[0]);
+        serializedSensable.put(COLUMN_LOCATION_LONGITUDE, sensable.getLocation()[1]);
+        serializedSensable.put(COLUMN_SENSOR_ID, sensable.getSensorid());
+        serializedSensable.put(COLUMN_UNIT, sensable.getUnit());
+        return serializedSensable;
     }
 
     public static Sensable getSensable(Cursor cursor) {

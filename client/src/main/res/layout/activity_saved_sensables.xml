@@ -15,8 +15,29 @@
             android:id="@+id/saved_sensable_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="#FFFFFF" />
+    <TextView
+            android:id="@+id/text_no_local"
+            android:text="@string/no_local"
+            android:layout_width="fill_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+    <ListView
+            style="@style/SensableTextView"
+            android:id="@+id/scheduled_sensable_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="#FFFFFF" />
     <Button
             android:layout_width="wrap_content"
+            android:id="@+id/show_create_sensable_dialog"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:text="@string/button_list_sensors"
             android:onClick="listSensors" />

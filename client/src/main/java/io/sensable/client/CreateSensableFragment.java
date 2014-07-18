@@ -1,15 +1,20 @@
 package io.sensable.client;
 
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import io.sensable.client.scheduler.ScheduleHelper;
+import io.sensable.client.sqlite.SavedSensablesTable;
+import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.Sample;
 import io.sensable.model.Sensable;
 import io.sensable.model.SensableSender;
@@ -21,6 +26,8 @@ import java.util.List;
  * Created by madine on 01/07/14.
  */
 public class CreateSensableFragment extends DialogFragment {
+
+    private static final String TAG = CreateSensableFragment.class.getSimpleName();
 
     private List<Sensor> sensorList;
     private Spinner sensorSpinner;
@@ -82,17 +89,29 @@ public class CreateSensableFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if(sensableId.getText().toString().length() > 0) {
+
+                    int sensorId = getSensorId(sensorSpinner.getSelectedItem().toString());
+
+                    // Create the object for scheduling
                     SensableSender sensableSender = new SensableSender();
+                    sensableSender.setSensorid(sensableId.getText().toString());
+                    sensableSender.setInternalSensorId(sensorId);
+                    sensableSender.setSensortype(sensorSpinner.getSelectedItem().toString());
+                    sensableSender.setUnit(SensorHelper.determineUnit(sensorId));
+                    sensableSender.setPending(0);
+
+                    //Create the bookmarkable object
                     Sensable sensable = new Sensable();
                     sensable.setSamples(new Sample[]{});
                     sensable.setSensorid(sensableId.getText().toString());
                     sensable.setLocation(new double[]{0,0});
+                    sensable.setUnit(sensableSender.getUnit());
 
-                    sensable.setUnit(determineUnit(sensorSpinner.getSelectedItem().toString()));
+                    // Schedule the sensable
+                    createScheduledSensable(sensableSender, sensable);
 
-                    sensableSender.setSensable(sensable);
-                    sensableSender.setInterval(1);
                     createSensableListener.onConfirmed(sensableSender);
+
                     dismiss();
                 } else {
                     Toast.makeText(getActivity(), "Sensable ID is required", Toast.LENGTH_SHORT).show();
@@ -103,53 +122,47 @@ public class CreateSensableFragment extends DialogFragment {
 
     }
 
-    private String determineUnit(String sensorName) {
+    private boolean createScheduledSensable(SensableSender sensableSender, Sensable sensable) {
+        ScheduleHelper scheduleHelper = new ScheduleHelper(getActivity());
+
+        Log.d(TAG, "Creating Scheduler");
+
+        // Try to create schedule entry
+        if(!scheduleHelper.addSensableToScheduler(sensableSender)) {
+            return false;
+        }
+
+        //Give the scheduler a kick in case it isn't already running.
+        scheduleHelper.startScheduler();
+
+        // Try to create local bookmark to this sensable
+        return saveSensable(sensable);
+
+    }
+
+    private boolean saveSensable(Sensable sensable) {
+        ContentValues mNewValues = SavedSensablesTable.serializeSensableForSqlLite(sensable);
+
+        Uri mNewUri = getActivity().getContentResolver().insert(
+                SensableContentProvider.CONTENT_URI,   // the user dictionary content URI
+                mNewValues                          // the values to insert
+        );
+        return true;
+    }
+
+    private int getSensorId(String sensorName) {
         Sensor chosenSensor = null;
-        for(int i=0; i<sensorList.size(); i++){
-            if(sensorList.get(i).getName() == sensorName) {
-                chosenSensor = sensorList.get(i);
+        for (Sensor aSensorList : sensorList) {
+            if (aSensorList.getName().equals(sensorName)) {
+                chosenSensor = aSensorList;
             }
         }
 
         if(chosenSensor == null) {
-            return null;
+            return -1;
         }
-
-        String unit = "";
-        switch(chosenSensor.getType()) {
-            case Sensor.TYPE_ACCELEROMETER: unit = "m/s^2";
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD: unit = "uT";
-                break;
-            case Sensor.TYPE_GYROSCOPE: unit = "rad/s";
-                break;
-            case Sensor.TYPE_LIGHT: unit = "lux";
-                break;
-            case Sensor.TYPE_PRESSURE: unit = "hPa";
-                break;
-            case Sensor.TYPE_PROXIMITY: unit = "cm";
-                break;
-            case Sensor.TYPE_GRAVITY: unit = "m/s^2";
-                break;
-            case Sensor.TYPE_LINEAR_ACCELERATION: unit = "m/s^2";
-                break;
-            case Sensor.TYPE_ROTATION_VECTOR: unit = "<θx, θy, θz>";
-                break;
-            case Sensor.TYPE_ORIENTATION: unit = "<degx, degy, degz>";
-                break;
-            case Sensor.TYPE_RELATIVE_HUMIDITY: unit = "%";
-                break;
-            case Sensor.TYPE_AMBIENT_TEMPERATURE: unit = "°C";
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED: unit = "uT";
-                break;
-            case Sensor.TYPE_GAME_ROTATION_VECTOR: unit = "<θx, θy, θz>";
-                break;
-            case Sensor.TYPE_GYROSCOPE_UNCALIBRATED: unit = "rad/s";
-                break;
-        }
-
-        return unit;
+        return chosenSensor.getType();
     }
+
 
 }

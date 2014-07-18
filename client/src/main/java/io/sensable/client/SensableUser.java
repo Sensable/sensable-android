@@ -132,11 +132,12 @@ public class SensableUser {
                 loggedIn = true;
 
                 String accessToken = user.getAccessToken();
-                Log.d(TAG, "Login Callback Success:" + user.getAccessToken());
+                Log.d(TAG, "Login Callback Success:" + accessToken);
                 if (accessToken != null) {
-                    mUser.setAccessToken(user.getAccessToken());
+                    mUser.setAccessToken(accessToken);
                     hasAccessToken = true;
                 }
+                saveUserToPreferences();
             }
 
             @Override
@@ -147,6 +148,7 @@ public class SensableUser {
     }
 
     private void saveUserToPreferences() {
+        Log.d(TAG, "Saving: " + mUser.getUsername() + ", " + mUser.getEmail() + ", " + mUser.getAccessToken());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(context.getString(R.string.saved_username), mUser.getUsername());
         editor.putString(context.getString(R.string.saved_email), mUser.getEmail());

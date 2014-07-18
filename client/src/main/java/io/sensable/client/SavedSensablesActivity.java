@@ -11,7 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
+import io.sensable.client.scheduler.ScheduleHelper;
 import io.sensable.client.sqlite.SavedSensablesTable;
+import io.sensable.client.sqlite.ScheduledSensableContentProvider;
+import io.sensable.client.sqlite.ScheduledSensablesTable;
 import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.Sensable;
 import io.sensable.model.SensableSender;
@@ -24,6 +27,8 @@ public class SavedSensablesActivity extends Activity {
     public final static String EXTRA_SENSABLE = "io.sensable.sensable";
 
     public SensableUser sensableUser;
+    private Button createSensableButton;
+
 
     //define callback interface
     public interface CallbackInterface {
@@ -36,10 +41,34 @@ public class SavedSensablesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_sensables);
 
+        final ListView scheduledSensableList = (ListView) findViewById(R.id.scheduled_sensable_list);
+        attachScheduledDatabaseToList(scheduledSensableList);
+        final TextView emptyText = (TextView) findViewById(R.id.text_no_local);
+        scheduledSensableList.setEmptyView(emptyText);
+        //add onclick to ListView
+        scheduledSensableList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                ScheduleHelper scheduleHelper = new ScheduleHelper(SavedSensablesActivity.this);
+                SensableSender sensableSender = ScheduledSensablesTable.getScheduledSensable((Cursor) parent.getItemAtPosition(position));
+//                scheduleHelper.removeSensableFromScheduler(sensableSender);
+
+                Intent intent = new Intent(SavedSensablesActivity.this, SensableActivity.class);
+                Sensable sensable = new Sensable();
+                sensable.setSensorid(sensableSender.getSensorid());
+                sensable.setUnit(sensableSender.getUnit());
+
+                intent.putExtra(EXTRA_SENSABLE, sensable);
+                startActivity(intent);
+
+            }
+        });
+
+
         final ListView sensableList = (ListView) findViewById(R.id.saved_sensable_list);
         attachDatabaseToList(sensableList);
-        final TextView emptyText = (TextView) findViewById(R.id.text_no_favourite);
-        sensableList.setEmptyView(emptyText);
+        final TextView emptyFavouriteText = (TextView) findViewById(R.id.text_no_favourite);
+        sensableList.setEmptyView(emptyFavouriteText);
 
         //add onclick to ListView
         sensableList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -54,9 +83,12 @@ public class SavedSensablesActivity extends Activity {
 
         SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         sensableUser = new SensableUser(sharedPref, this);
-        if(sensableUser.loggedIn) {
+        createSensableButton = (Button) findViewById(R.id.show_create_sensable_dialog);
+        if (sensableUser.loggedIn) {
+            createSensableButton.setVisibility(View.VISIBLE);
             Toast.makeText(SavedSensablesActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
         } else {
+            createSensableButton.setVisibility(View.GONE);
             Toast.makeText(SavedSensablesActivity.this, "Not logged In", Toast.LENGTH_SHORT).show();
         }
 
@@ -84,7 +116,7 @@ public class SavedSensablesActivity extends Activity {
         createSensableFragment.setCreateSensableListener(new CreateSensableFragment.CreateSensableListener() {
             @Override
             public void onConfirmed(SensableSender sensableSender) {
-                Toast.makeText(SavedSensablesActivity.this, sensableSender.getSensable().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SavedSensablesActivity.this, sensableSender.getSensorid(), Toast.LENGTH_SHORT).show();
             }
         });
         createSensableFragment.show(fm, "create_sensable_name");
@@ -95,16 +127,19 @@ public class SavedSensablesActivity extends Activity {
      */
     public void loginDialog() {
         FragmentManager fm = getFragmentManager();
-        SensableLoginFragment sensableLoginFragment = new SensableLoginFragment ();
+        SensableLoginFragment sensableLoginFragment = new SensableLoginFragment();
         sensableLoginFragment.setSensableLoginListener(new SensableLoginFragment.SensableLoginListener() {
             @Override
             public void onConfirmed(UserLogin userLogin) {
                 sensableUser.login(userLogin, new CallbackInterface() {
                     @Override
                     public void loginStatusUpdate(Boolean loggedIn) {
-                        if(loggedIn) {
+
+                        if (loggedIn) {
+                            createSensableButton.setVisibility(View.VISIBLE);
                             Toast.makeText(SavedSensablesActivity.this, "Successfully logged In", Toast.LENGTH_SHORT).show();
                         } else {
+                            createSensableButton.setVisibility(View.GONE);
                             Toast.makeText(SavedSensablesActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                         }
                         invalidateOptionsMenu();
@@ -141,12 +176,39 @@ public class SavedSensablesActivity extends Activity {
             SavedSensablesTable.COLUMN_UNIT
     };
 
+    private void attachScheduledDatabaseToList(ListView listView) {
+        // Get a cursor with all people
+        Cursor c = getContentResolver().query(ScheduledSensableContentProvider.CONTENT_URI,
+                SCHEDULED_SENSABLE_PROJECTION, null, null, null);
+        startManagingCursor(c);
+
+        ListAdapter adapter = new SimpleCursorAdapter(this,
+                // Use a template that displays a text view
+                android.R.layout.simple_list_item_1,
+                // Give the cursor to the list adapter
+                c,
+                // Map the NAME column in the people database to...
+                new String[]{ScheduledSensablesTable.COLUMN_SENSABLE_ID},
+                // The "text1" view defined in the XML template
+                new int[]{android.R.id.text1});
+        listView.setAdapter(adapter);
+    }
+
+    private static final String[] SCHEDULED_SENSABLE_PROJECTION = new String[]{
+            ScheduledSensablesTable.COLUMN_ID,
+            ScheduledSensablesTable.COLUMN_SENSABLE_ID,
+            ScheduledSensablesTable.COLUMN_SENSOR_ID,
+            ScheduledSensablesTable.COLUMN_SENSOR_TYPE,
+            ScheduledSensablesTable.COLUMN_PENDING,
+            ScheduledSensablesTable.COLUMN_UNIT
+    };
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.saved_sensables, menu);
-        if(sensableUser.loggedIn) {
+        if (sensableUser.loggedIn) {
             menu.findItem(R.id.action_login).setVisible(false);
             menu.findItem(R.id.action_logout).setVisible(true);
         } else {
@@ -168,10 +230,12 @@ public class SavedSensablesActivity extends Activity {
             sensableUser.deleteSavedUser(new CallbackInterface() {
                 @Override
                 public void loginStatusUpdate(Boolean loggedIn) {
-                    if(!loggedIn) {
+                    if (!loggedIn) {
                         Toast.makeText(SavedSensablesActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
+                        createSensableButton.setVisibility(View.GONE);
                     } else {
                         Toast.makeText(SavedSensablesActivity.this, "Logout failed", Toast.LENGTH_SHORT).show();
+                        createSensableButton.setVisibility(View.VISIBLE);
                     }
                     invalidateOptionsMenu();
                 }
