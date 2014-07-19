@@ -47,7 +47,6 @@ public class ScheduledSensablesTable {
 
     public static SensableSender getScheduledSensable(Cursor cursor) {
         SensableSender sensableSender = new SensableSender();
-        cursor.moveToFirst();
         sensableSender.setId(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_ID)));
         sensableSender.setSensorid(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSABLE_ID)));
         sensableSender.setInternalSensorId(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_ID)));
