@@ -9,6 +9,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.IBinder;
 import android.util.Log;
 import io.sensable.SensableService;
@@ -69,10 +71,12 @@ public class ScheduledSensableService extends Service {
                     // This should parse the sensor type and format the values array differently
                     sample.setValue(event.values[0]);
 
+                    /* Location */
+                    Location lastKnownLocation = getLocation();
+                    Log.d(TAG, "Location: " + lastKnownLocation.toString());
 
-                    // Create the sendable object
-//                    SensableSender sensableSender = new SensableSender();
-                    sensableSender.setLocation(new double[]{0, 0});
+                    // Update the sendable object
+                    sensableSender.setLocation(new double[]{lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude()});
                     sensableSender.setSample(sample);
                     sensableSender.setSensortype(event.sensor.getName());
 
@@ -147,6 +151,12 @@ public class ScheduledSensableService extends Service {
             return "";
         }
 
+    }
+
+    private Location getLocation() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        return locationManager.getLastKnownLocation(locationProvider);
     }
 
 
