@@ -51,69 +51,7 @@ public class ScheduledSensableService extends Service {
             // Register the listener on the sensor
             List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ALL);
             Sensor sensor = sensorManager.getDefaultSensor(sensableSender.getInternalSensorId());
-            sensorManager.registerListener(new SensorEventListener() {
-                @Override
-                public void onSensorChanged(SensorEvent event) {
-                    Log.d(TAG, "Sensor Value Changed");
-                    ScheduleHelper scheduleHelper = new ScheduleHelper(ScheduledSensableService.this);
-
-                    RestAdapter restAdapter = new RestAdapter.Builder()
-                            .setLogLevel(RestAdapter.LogLevel.FULL)
-                            .setEndpoint("http://sensable.io")
-                            .build();
-                    SensableService service = restAdapter.create(SensableService.class);
-
-                    // Create the sample object
-                    Sample sample = new Sample();
-
-                    sample.setTimestamp((System.currentTimeMillis()));
-
-                    // This should parse the sensor type and format the values array differently
-                    sample.setValue(event.values[0]);
-
-                    /* Location */
-                    Location lastKnownLocation = getLocation();
-                    Log.d(TAG, "Location: " + lastKnownLocation.toString());
-
-                    // Update the sendable object
-                    sensableSender.setLocation(new double[]{lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude()});
-                    sensableSender.setSample(sample);
-                    sensableSender.setSensortype(event.sensor.getName());
-
-                    sensableSender.setInternalSensorId(event.sensor.getType());
-                    sensableSender.setUnit(SensorHelper.determineUnit(event.sensor.getType()));
-                    sensableSender.setPrivateSensor(false);
-                    sensableSender.setAccessToken(getUserAccessToken());
-
-                    Log.d(TAG, "Saving sample: " + event.sensor.getName() + " : " + event.values[0]);
-                    service.saveSample(sensableSender, new Callback<SampleResponse>() {
-                        @Override
-                        public void success(SampleResponse success, Response response) {
-                            Log.d(TAG, "Success posting sample");
-                        }
-
-                        @Override
-                        public void failure(RetrofitError retrofitError) {
-                            Log.e(TAG, "Failed to post sample: " + retrofitError.toString());
-                        }
-                    });
-
-                    scheduleHelper.unsetSensablePending(sensableSender);
-
-                    // stop the sensor and service
-                    sensorManager.unregisterListener(this);
-                    if (scheduleHelper.countPendingScheduledTasks() == 0) {
-                        // Stop this service from sampling as we are not waiting for any more samples to come in
-                        stopSelf();
-                        scheduleHelper.stopSchedulerIfNotNeeded();
-                    }
-                }
-
-                @Override
-                public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-                }
-            }, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(getListener(sensableSender), sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
             // Mark this sensable as pending
             scheduleHelper.setSensablePending(sensableSender);
@@ -121,6 +59,72 @@ public class ScheduledSensableService extends Service {
         scheduleHelper.stopSchedulerIfNotNeeded();
 
         return START_STICKY;
+    }
+
+    private SensorEventListener getListener(final SensableSender sensableSender) {
+        return new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                Log.d(TAG, "Sensor Value Changed");
+                ScheduleHelper scheduleHelper = new ScheduleHelper(ScheduledSensableService.this);
+
+                RestAdapter restAdapter = new RestAdapter.Builder()
+                        .setLogLevel(RestAdapter.LogLevel.FULL)
+                        .setEndpoint("http://sensable.io")
+                        .build();
+                SensableService service = restAdapter.create(SensableService.class);
+
+                // Create the sample object
+                Sample sample = new Sample();
+
+                sample.setTimestamp((System.currentTimeMillis()));
+
+                // This should parse the sensor type and format the values array differently
+                sample.setValue(event.values[0]);
+
+                /* Location */
+                Location lastKnownLocation = getLocation();
+                Log.d(TAG, "Location: " + lastKnownLocation.toString());
+
+                // Update the sendable object
+                sensableSender.setLocation(new double[]{lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude()});
+                sensableSender.setSample(sample);
+                sensableSender.setSensortype(event.sensor.getName());
+
+                sensableSender.setInternalSensorId(event.sensor.getType());
+                sensableSender.setUnit(SensorHelper.determineUnit(event.sensor.getType()));
+                sensableSender.setPrivateSensor(false);
+                sensableSender.setAccessToken(getUserAccessToken());
+
+                Log.d(TAG, "Saving sample: " + event.sensor.getName() + " : " + event.values[0]);
+                service.saveSample(sensableSender, new Callback<SampleResponse>() {
+                    @Override
+                    public void success(SampleResponse success, Response response) {
+                        Log.d(TAG, "Success posting sample");
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Log.e(TAG, "Failed to post sample: " + retrofitError.toString());
+                    }
+                });
+
+                scheduleHelper.unsetSensablePending(sensableSender);
+
+                // stop the sensor and service
+                sensorManager.unregisterListener(this);
+                if (scheduleHelper.countPendingScheduledTasks() == 0) {
+                    // Stop this service from sampling as we are not waiting for any more samples to come in
+                    stopSelf();
+                    scheduleHelper.stopSchedulerIfNotNeeded();
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
     }
 
     @Override

@@ -28,5 +28,7 @@
     <string name="sensable_username">Username</string>
     <string name="sensable_password">Password</string>
     <string name="no_local">You have no local sensables</string>
+    <string name="favourite_title">Favourite Sensables</string>
+    <string name="local_sensables_title">Local Sensables</string>
 
 </resources>

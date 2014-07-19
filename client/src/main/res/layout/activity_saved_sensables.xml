@@ -5,6 +5,12 @@
               android:layout_height="fill_parent"
         >
     <TextView
+            android:id="@+id/text_favourite_title"
+            android:text="@string/favourite_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"/>
+    <TextView
             android:id="@+id/text_no_favourite"
             android:text="@string/no_favourites"
             android:layout_width="fill_parent"
@@ -19,6 +25,12 @@
             android:layout_width="fill_parent"
             android:layout_height="1dip"
             android:background="#FFFFFF" />
+    <TextView
+            android:id="@+id/text_local_title"
+            android:text="@string/local_sensables_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"/>
     <TextView
             android:id="@+id/text_no_local"
             android:text="@string/no_local"
