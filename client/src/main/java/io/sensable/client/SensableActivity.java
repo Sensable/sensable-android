@@ -1,7 +1,9 @@
 package io.sensable.client;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import io.sensable.SensableService;
 import io.sensable.client.scheduler.ScheduleHelper;
 import io.sensable.client.sqlite.SavedSensablesTable;
@@ -110,10 +113,30 @@ public class SensableActivity extends Activity {
             deleteLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ScheduleHelper scheduleHelper = new ScheduleHelper(SensableActivity.this);
-                    SensableSender sensableSender = ScheduledSensablesTable.getScheduledSensable(localSender);
-                    scheduleHelper.removeSensableFromScheduler(sensableSender);
-                    deleteLocal.setVisibility(View.GONE);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SensableActivity.this);
+                    builder.setMessage("Stop sampling with this sensable?");
+                    builder.setTitle("Confirmation Dialog");
+
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ScheduleHelper scheduleHelper = new ScheduleHelper(SensableActivity.this);
+                            SensableSender sensableSender = ScheduledSensablesTable.getScheduledSensable(localSender);
+                            scheduleHelper.removeSensableFromScheduler(sensableSender);
+                            deleteLocal.setVisibility(View.GONE);
+                            Toast.makeText(SensableActivity.this, "Sensable stopped", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.create().show();
+
+
+
                 }
             });
         }
