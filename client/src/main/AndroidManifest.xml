@@ -16,6 +16,11 @@
             android:icon="@drawable/icon"
             android:theme="@style/SensableStyle">
         <service android:name="io.sensable.client.scheduler.ScheduledSensableService" />
+        <receiver android:name="io.sensable.client.scheduler.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <provider
                 android:name="io.sensable.client.sqlite.SensableContentProvider"
                 android:authorities="io.sensable.client.contentprovider"

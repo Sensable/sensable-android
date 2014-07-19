@@ -25,11 +25,17 @@ public class ScheduleHelper {
     }
 
     public boolean startScheduler() {
-        // Create scheduled task if it doesn't already exist.
         Intent intent = new Intent(context.getApplicationContext(), ScheduledSensableService.class);
-        PendingIntent scheduledIntent = PendingIntent.getService(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, scheduledIntent);
-        return true;
+        boolean alarmUp = (PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+
+        if (alarmUp) {
+            return true;
+        } else {
+            // Create scheduled task if it doesn't already exist.
+            PendingIntent scheduledIntent = PendingIntent.getService(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, scheduledIntent);
+            return true;
+        }
     }
 
     public Cursor getScheduledTasks() {

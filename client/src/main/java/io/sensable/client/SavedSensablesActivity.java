@@ -41,6 +41,10 @@ public class SavedSensablesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_sensables);
 
+        ScheduleHelper scheduleHelper = new ScheduleHelper(this);
+        scheduleHelper.startScheduler();
+
+
         final ListView scheduledSensableList = (ListView) findViewById(R.id.scheduled_sensable_list);
         attachScheduledDatabaseToList(scheduledSensableList);
         final TextView emptyText = (TextView) findViewById(R.id.text_no_local);
@@ -49,9 +53,7 @@ public class SavedSensablesActivity extends Activity {
         scheduledSensableList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                ScheduleHelper scheduleHelper = new ScheduleHelper(SavedSensablesActivity.this);
                 SensableSender sensableSender = ScheduledSensablesTable.getScheduledSensable((Cursor) parent.getItemAtPosition(position));
-//                scheduleHelper.removeSensableFromScheduler(sensableSender);
 
                 Intent intent = new Intent(SavedSensablesActivity.this, SensableActivity.class);
                 Sensable sensable = new Sensable();
