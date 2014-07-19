@@ -1,9 +1,8 @@
 package io.sensable.client.sqlite;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import io.sensable.model.Sample;
 import io.sensable.model.Sensable;
 

@@ -51,7 +51,7 @@ public class CreateSensableFragment extends DialogFragment {
         getDialog().setTitle(getActivity().getString(R.string.dialogTitleCreateSensable));
 
         List<String> listSensorType = new ArrayList<String>();
-        for(int i=0; i<sensorList.size(); i++){
+        for (int i = 0; i < sensorList.size(); i++) {
             listSensorType.add(sensorList.get(i).getName());
         }
 
@@ -77,7 +77,6 @@ public class CreateSensableFragment extends DialogFragment {
     }
 
 
-
     public void addListenerOnButton(View view) {
 
         sensorSpinner = (Spinner) view.findViewById(R.id.sensor_spinner);
@@ -88,7 +87,7 @@ public class CreateSensableFragment extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                if(sensableId.getText().toString().length() > 0) {
+                if (sensableId.getText().toString().length() > 0) {
 
                     int sensorId = getSensorId(sensorSpinner.getSelectedItem().toString());
 
@@ -104,7 +103,7 @@ public class CreateSensableFragment extends DialogFragment {
                     Sensable sensable = new Sensable();
                     sensable.setSamples(new Sample[]{});
                     sensable.setSensorid(sensableId.getText().toString());
-                    sensable.setLocation(new double[]{0,0});
+                    sensable.setLocation(new double[]{0, 0});
                     sensable.setUnit(sensableSender.getUnit());
 
                     // Schedule the sensable
@@ -128,7 +127,7 @@ public class CreateSensableFragment extends DialogFragment {
         Log.d(TAG, "Creating Scheduler");
 
         // Try to create schedule entry
-        if(!scheduleHelper.addSensableToScheduler(sensableSender)) {
+        if (!scheduleHelper.addSensableToScheduler(sensableSender)) {
             return false;
         }
 
@@ -158,7 +157,7 @@ public class CreateSensableFragment extends DialogFragment {
             }
         }
 
-        if(chosenSensor == null) {
+        if (chosenSensor == null) {
             return -1;
         }
         return chosenSensor.getType();

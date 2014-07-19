@@ -18,7 +18,7 @@ public class SensableDatabaseHelper extends SQLiteOpenHelper {
      * The Internet and common sense say that having multiple open
      * connections to a database is bad for performance and it is
      * a bad practice.
-     *
+     * <p/>
      * {@link SensableDatabaseHelper} connects Content Providers to a
      * SQLite DB that is stored on the filesystem. Therefore it
      * is best to use a singleton for that and use it every time
@@ -30,7 +30,7 @@ public class SensableDatabaseHelper extends SQLiteOpenHelper {
      * @return
      */
     public static synchronized SensableDatabaseHelper getHelper(Context context) {
-        if(sInstance == null) {
+        if (sInstance == null) {
             sInstance = new SensableDatabaseHelper(context.getApplicationContext());
         }
         return sInstance;

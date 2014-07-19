@@ -3,8 +3,6 @@ package io.sensable.client;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 import io.sensable.SensableService;
 import io.sensable.model.User;
 import io.sensable.model.UserLogin;
@@ -57,7 +55,7 @@ public class SensableUser {
 
     private boolean readUserFromPreferences() {
         String username = sharedPreferences.getString(context.getString(R.string.saved_username), "");
-        if(username != "") {
+        if (username != "") {
             Log.d(TAG, "Username:" + username);
             // User is logged in
             mUser.setUsername(username);
@@ -67,7 +65,7 @@ public class SensableUser {
 
             String accessToken = sharedPreferences.getString(context.getString(R.string.saved_access_token), "");
             Log.d(TAG, "Access Token:" + accessToken);
-            if(accessToken != "") {
+            if (accessToken != "") {
                 mUser.setAccessToken(accessToken);
                 hasAccessToken = true;
             }
@@ -109,9 +107,9 @@ public class SensableUser {
     private void extractSessionId(List<Header> headers) {
         String cookieString = "";
         for (int i = 0; i < headers.size(); i++) {
-            if(headers.get(i).getName() == "Set-Cookie") {
+            if (headers.get(i).getName() == "Set-Cookie") {
                 cookieString = headers.get(i).getValue();
-                if(cookieString.startsWith("connect.sid=")) {
+                if (cookieString.startsWith("connect.sid=")) {
                     sessionId = cookieString.substring(12, cookieString.length() - 1);
                 }
             }

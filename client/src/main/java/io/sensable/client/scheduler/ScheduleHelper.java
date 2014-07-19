@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import io.sensable.client.sqlite.ScheduledSensableContentProvider;
 import io.sensable.client.sqlite.ScheduledSensablesTable;
 import io.sensable.model.SensableSender;
@@ -16,25 +17,27 @@ import io.sensable.model.SensableSender;
  */
 public class ScheduleHelper {
 
+    private static final String TAG = ScheduleHelper.class.getSimpleName();
     private Context context;
     private AlarmManager scheduler;
+    private static final int PENDING_INTENT_ID = 12345;
 
     public ScheduleHelper(Context context) {
         this.context = context.getApplicationContext();
         scheduler = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
-    public boolean startScheduler() {
+    public void startScheduler() {
         Intent intent = new Intent(context.getApplicationContext(), ScheduledSensableService.class);
-        boolean alarmUp = (PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+        boolean alarmUp = (PendingIntent.getBroadcast(context.getApplicationContext(), PENDING_INTENT_ID, intent, PendingIntent.FLAG_NO_CREATE) != null);
 
         if (alarmUp) {
-            return true;
+            Log.d(TAG, "AlarmManager already running. Exit without recreating it.");
         } else {
             // Create scheduled task if it doesn't already exist.
-            PendingIntent scheduledIntent = PendingIntent.getService(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Log.d(TAG, "AlarmManager not running. Create it now.");
+            PendingIntent scheduledIntent = PendingIntent.getService(context.getApplicationContext(), PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, scheduledIntent);
-            return true;
         }
     }
 
@@ -57,7 +60,6 @@ public class ScheduleHelper {
         if (countScheduledTasks() == 0) {
             Intent intent = new Intent(context, ScheduledSensableService.class);
             PendingIntent scheduledIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
             scheduler.cancel(scheduledIntent);
         }
         return true;

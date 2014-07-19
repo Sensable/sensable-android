@@ -4,58 +4,68 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
+
     <TextView
             android:id="@+id/text_favourite_title"
             android:text="@string/favourite_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textSize="22sp"/>
+
     <TextView
             android:id="@+id/text_no_favourite"
             android:text="@string/no_favourites"
             android:layout_width="fill_parent"
             android:visibility="gone"
             android:layout_height="wrap_content"/>
+
     <ListView
             style="@style/SensableTextView"
             android:id="@+id/saved_sensable_list"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
+
     <View
             android:layout_width="fill_parent"
             android:layout_height="1dip"
-            android:background="#FFFFFF" />
+            android:background="#FFFFFF"/>
+
     <TextView
             android:id="@+id/text_local_title"
             android:text="@string/local_sensables_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textSize="22sp"/>
+
     <TextView
             android:id="@+id/text_no_local"
             android:text="@string/no_local"
             android:layout_width="fill_parent"
             android:visibility="gone"
             android:layout_height="wrap_content"/>
+
     <ListView
             style="@style/SensableTextView"
             android:id="@+id/scheduled_sensable_list"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
+
     <View
             android:layout_width="fill_parent"
             android:layout_height="1dip"
-            android:background="#FFFFFF" />
+            android:background="#FFFFFF"/>
+
     <Button
             android:layout_width="wrap_content"
             android:id="@+id/show_create_sensable_dialog"
             android:visibility="gone"
             android:layout_height="wrap_content"
             android:text="@string/button_list_sensors"
-            android:onClick="listSensors" />
+            android:onClick="listSensors"/>
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_list_sensables"
-            android:onClick="showAllSensables" />
+            android:onClick="showAllSensables"/>
 </LinearLayout>

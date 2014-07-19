@@ -3,16 +3,16 @@ package io.sensable.client.sqlite;
 /**
  * Created by madine on 03/07/14.
  */
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
-import android.util.Log;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class SensableContentProvider extends ContentProvider {
 
@@ -27,6 +27,7 @@ public class SensableContentProvider extends ContentProvider {
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
 
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH, SENSABLES);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/*", SENSABLE_ID);
@@ -77,7 +78,7 @@ public class SensableContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         Log.d(TAG, "Inserting: " + values.toString());
         int uriType = sURIMatcher.match(uri);
-        if(dbHelper == null) {
+        if (dbHelper == null) {
             dbHelper = SensableDatabaseHelper.getHelper(getContext());
         }
 

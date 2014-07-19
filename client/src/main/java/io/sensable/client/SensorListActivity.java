@@ -1,14 +1,14 @@
 package io.sensable.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ListActivity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by madine on 01/07/14.

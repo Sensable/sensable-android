@@ -135,8 +135,8 @@ public class ScheduledSensableService extends Service {
 
     private String getUserAccessToken() {
         SensableUser user = new SensableUser(this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE), this);
-        if(user.loggedIn) {
-            if(user.hasAccessToken) {
+        if (user.loggedIn) {
+            if (user.hasAccessToken) {
                 Log.d(TAG, "Loading Access token");
                 Log.d(TAG, getString(R.string.preference_file_key));
                 Log.d(TAG, getString(R.string.saved_access_token));

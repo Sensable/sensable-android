@@ -66,8 +66,8 @@ public class SensableActivity extends Activity {
         sensableUnit = (TextView) findViewById(R.id.sensable_unit_field);
         sensableLocation = (TextView) findViewById(R.id.sensable_location_field);
 
-        if(sensable.getLocation() == null) {
-            sensable.setLocation(new double[]{0,0});
+        if (sensable.getLocation() == null) {
+            sensable.setLocation(new double[]{0, 0});
         }
 
         if (sensable.getSamples() == null) {
@@ -134,7 +134,6 @@ public class SensableActivity extends Activity {
                     });
 
                     builder.create().show();
-
 
 
                 }

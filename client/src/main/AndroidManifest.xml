@@ -42,9 +42,6 @@
         <activity
                 android:name="io.sensable.client.SensorListActivity"
                 android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
         </activity>
         <activity
                 android:name="io.sensable.client.SensableActivity"
@@ -52,6 +49,7 @@
         </activity>
         <activity
                 android:name="io.sensable.client.SavedSensablesActivity"
+                android:configChanges="orientation|screenSize"
                 android:label="@string/title_activity_saved_sensables">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

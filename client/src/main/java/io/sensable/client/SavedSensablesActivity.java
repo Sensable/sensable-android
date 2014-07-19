@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -44,13 +45,49 @@ public class SavedSensablesActivity extends Activity {
         ScheduleHelper scheduleHelper = new ScheduleHelper(this);
         scheduleHelper.startScheduler();
 
-
         final ListView scheduledSensableList = (ListView) findViewById(R.id.scheduled_sensable_list);
         attachScheduledDatabaseToList(scheduledSensableList);
         final TextView emptyText = (TextView) findViewById(R.id.text_no_local);
         scheduledSensableList.setEmptyView(emptyText);
         //add onclick to ListView
-        scheduledSensableList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        scheduledSensableList.setOnItemClickListener(getScheduledSensableListener());
+
+
+        final ListView sensableList = (ListView) findViewById(R.id.saved_sensable_list);
+        attachDatabaseToList(sensableList);
+        final TextView emptyFavouriteText = (TextView) findViewById(R.id.text_no_favourite);
+        sensableList.setEmptyView(emptyFavouriteText);
+
+        //add onclick to ListView
+        sensableList.setOnItemClickListener(getSavedSensableListener());
+
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        sensableUser = new SensableUser(sharedPref, this);
+        createSensableButton = (Button) findViewById(R.id.show_create_sensable_dialog);
+        if (sensableUser.loggedIn) {
+            createSensableButton.setVisibility(View.VISIBLE);
+            Toast.makeText(SavedSensablesActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
+        } else {
+            createSensableButton.setVisibility(View.GONE);
+            Toast.makeText(SavedSensablesActivity.this, "Not logged In", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private AdapterView.OnItemClickListener getSavedSensableListener() {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(SavedSensablesActivity.this, SensableActivity.class);
+                Sensable sensable = SavedSensablesTable.getSensable((Cursor) parent.getItemAtPosition(position));
+                intent.putExtra(EXTRA_SENSABLE, sensable);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private AdapterView.OnItemClickListener getScheduledSensableListener() {
+        return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SensableSender sensableSender = ScheduledSensablesTable.getScheduledSensable((Cursor) parent.getItemAtPosition(position));
@@ -64,36 +101,7 @@ public class SavedSensablesActivity extends Activity {
                 startActivity(intent);
 
             }
-        });
-
-
-        final ListView sensableList = (ListView) findViewById(R.id.saved_sensable_list);
-        attachDatabaseToList(sensableList);
-        final TextView emptyFavouriteText = (TextView) findViewById(R.id.text_no_favourite);
-        sensableList.setEmptyView(emptyFavouriteText);
-
-        //add onclick to ListView
-        sensableList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SavedSensablesActivity.this, SensableActivity.class);
-                Sensable sensable = SavedSensablesTable.getSensable((Cursor) parent.getItemAtPosition(position));
-                intent.putExtra(EXTRA_SENSABLE, sensable);
-                startActivity(intent);
-            }
-        });
-
-        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        sensableUser = new SensableUser(sharedPref, this);
-        createSensableButton = (Button) findViewById(R.id.show_create_sensable_dialog);
-        if (sensableUser.loggedIn) {
-            createSensableButton.setVisibility(View.VISIBLE);
-            Toast.makeText(SavedSensablesActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
-        } else {
-            createSensableButton.setVisibility(View.GONE);
-            Toast.makeText(SavedSensablesActivity.this, "Not logged In", Toast.LENGTH_SHORT).show();
-        }
-
+        };
     }
 
     @Override
@@ -244,6 +252,11 @@ public class SavedSensablesActivity extends Activity {
             });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
 }

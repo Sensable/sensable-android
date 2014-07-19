@@ -19,7 +19,7 @@ public class ScheduledSensablesTable {
     public static final String COLUMN_PENDING = "scheduled_pending";
 
     private static final String DATABASE_CREATE = "create table " + NAME + "(" + COLUMN_ID + " integer primary key autoincrement, "
-            + COLUMN_SENSABLE_ID+ " text unique not null, "
+            + COLUMN_SENSABLE_ID + " text unique not null, "
             + COLUMN_SENSOR_ID + " int not null, "
             + COLUMN_SENSOR_TYPE + " text not null, "
             + COLUMN_UNIT + " text not null, "
