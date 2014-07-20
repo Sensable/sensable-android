@@ -11,4 +11,8 @@
           android:title="@string/action_login"
           android:orderInCategory="100"
           android:showAsAction="never" />
+    <item android:id="@+id/action_create"
+          android:title="@string/action_create"
+          android:orderInCategory="100"
+          android:showAsAction="never" />
 </menu>

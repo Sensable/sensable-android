@@ -75,7 +75,7 @@ public class SensableUser {
         }
     }
 
-    public void login(UserLogin userLogin, final SavedSensablesActivity.CallbackInterface cb) {
+    public void login(UserLogin userLogin, final MainActivity.CallbackInterface cb) {
 
         service.login(userLogin, new Callback<User>() {
             @Override
@@ -154,7 +154,7 @@ public class SensableUser {
         editor.commit();
     }
 
-    public void deleteSavedUser(final SavedSensablesActivity.CallbackInterface cb) {
+    public void deleteSavedUser(final MainActivity.CallbackInterface cb) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(context.getString(R.string.saved_username));
         editor.remove(context.getString(R.string.saved_email));

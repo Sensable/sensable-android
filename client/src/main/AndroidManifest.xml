@@ -9,19 +9,20 @@
             android:targetSdkVersion="20"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
             android:label="@string/app_name"
             android:allowBackup="true"
             android:icon="@drawable/icon"
             android:theme="@style/SensableStyle">
-        <service android:name="io.sensable.client.scheduler.ScheduledSensableService" />
+        <service android:name="io.sensable.client.scheduler.ScheduledSensableService"/>
         <receiver android:name="io.sensable.client.scheduler.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+
         <provider
                 android:name="io.sensable.client.sqlite.SensableContentProvider"
                 android:authorities="io.sensable.client.contentprovider"
@@ -32,12 +33,13 @@
                 android:authorities="io.sensable.client.scheduledcontentprovider"
                 android:exported="false">
         </provider>
+
         <activity
                 android:name="io.sensable.client.SensablesListActivity"
                 android:label="@string/title_activity_all_sensables">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+            <!--</intent-filter>-->
         </activity>
         <activity
                 android:name="io.sensable.client.SensorListActivity"
@@ -51,6 +53,15 @@
                 android:name="io.sensable.client.SavedSensablesActivity"
                 android:configChanges="orientation|screenSize"
                 android:label="@string/title_activity_saved_sensables">
+            <intent-filter>
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".MainActivity"
+                android:label="@string/title_app">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

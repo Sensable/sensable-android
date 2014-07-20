@@ -31,5 +31,7 @@
     <string name="favourite_title">Favourite Sensables</string>
     <string name="local_sensables_title">Local Sensables</string>
     <string name="text_stop">Stop</string>
+    <string name="title_app">Sensables</string>
+    <string name="action_create">Create Sensable</string>
 
 </resources>
