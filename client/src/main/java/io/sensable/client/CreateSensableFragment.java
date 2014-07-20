@@ -3,6 +3,7 @@ package io.sensable.client;
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -12,12 +13,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import io.sensable.SensableService;
 import io.sensable.client.scheduler.ScheduleHelper;
 import io.sensable.client.sqlite.SavedSensablesTable;
 import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.Sample;
+import io.sensable.model.SampleResponse;
 import io.sensable.model.Sensable;
-import io.sensable.model.SensableSender;
+import io.sensable.model.ScheduledSensable;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +43,7 @@ public class CreateSensableFragment extends DialogFragment {
     private CreateSensableListener createSensableListener;
 
     public static interface CreateSensableListener {
-        public void onConfirmed(SensableSender sensableSender);
+        public void onConfirmed(ScheduledSensable scheduledSensable);
     }
 
     public CreateSensableFragment() {
@@ -68,14 +75,9 @@ public class CreateSensableFragment extends DialogFragment {
         return view;
     }
 
-    public CreateSensableListener getRecipientPickerListener() {
-        return createSensableListener;
-    }
-
     public void setCreateSensableListener(CreateSensableListener createSensableListener) {
         this.createSensableListener = createSensableListener;
     }
-
 
     public void addListenerOnButton(View view) {
 
@@ -92,26 +94,53 @@ public class CreateSensableFragment extends DialogFragment {
                     int sensorId = getSensorId(sensorSpinner.getSelectedItem().toString());
 
                     // Create the object for scheduling
-                    SensableSender sensableSender = new SensableSender();
-                    sensableSender.setSensorid(sensableId.getText().toString());
-                    sensableSender.setInternalSensorId(sensorId);
-                    sensableSender.setSensortype(sensorSpinner.getSelectedItem().toString());
-                    sensableSender.setUnit(SensorHelper.determineUnit(sensorId));
-                    sensableSender.setPending(0);
+                    final ScheduledSensable scheduledSensable = new ScheduledSensable();
+                    scheduledSensable.setSensorid(sensableId.getText().toString());
+                    scheduledSensable.setInternalSensorId(sensorId);
+                    scheduledSensable.setSensortype(sensorSpinner.getSelectedItem().toString());
+                    scheduledSensable.setUnit(SensorHelper.determineUnit(sensorId));
+                    scheduledSensable.setPending(0);
 
                     //Create the bookmarkable object
-                    Sensable sensable = new Sensable();
-                    sensable.setSamples(new Sample[]{});
+                    final Sensable sensable = new Sensable();
                     sensable.setSensorid(sensableId.getText().toString());
+                    sensable.setUnit(scheduledSensable.getUnit());
+                    sensable.setName(sensableId.getText().toString());
+                    sensable.setSensortype(sensorSpinner.getSelectedItem().toString());
                     sensable.setLocation(new double[]{0, 0});
-                    sensable.setUnit(sensableSender.getUnit());
+                    sensable.setSample(new Sample());
+                    sensable.setAccessToken(getUserAccessToken());
 
-                    // Schedule the sensable
-                    createScheduledSensable(sensableSender, sensable);
+                    RestAdapter restAdapter = new RestAdapter.Builder()
+                            .setLogLevel(RestAdapter.LogLevel.FULL)
+                            .setEndpoint("http://sensable.io")
+                            .build();
 
-                    createSensableListener.onConfirmed(sensableSender);
+                    SensableService service = restAdapter.create(SensableService.class);
 
-                    dismiss();
+                    service.createSensable(sensable, new Callback<SampleResponse>() {
+                        @Override
+                        public void success(SampleResponse sampleResponse, Response response) {
+                            Log.d(TAG, "Callback Success: " + sampleResponse.getMessage());
+
+                            // The service returns the canonical sensableID. Set that before saving the objects.
+                            sensable.setSensorid(sampleResponse.getSensorid());
+                            scheduledSensable.setSensorid(sampleResponse.getSensorid());
+
+                            // Schedule the sensable then create the favourite bookmark
+                            createScheduledSensable(scheduledSensable, sensable);
+                            createSensableListener.onConfirmed(scheduledSensable);
+                            dismiss();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError retrofitError) {
+                            Log.e(TAG, "Callback failure: " + retrofitError.toString());
+                            Toast.makeText(getActivity(), "Could not create that Sensable", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
                 } else {
                     Toast.makeText(getActivity(), "Sensable ID is required", Toast.LENGTH_SHORT).show();
                 }
@@ -121,13 +150,38 @@ public class CreateSensableFragment extends DialogFragment {
 
     }
 
-    private boolean createScheduledSensable(SensableSender sensableSender, Sensable sensable) {
+    private String getUserAccessToken() {
+        SensableUser user = new SensableUser(getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE), getActivity());
+        if (user.loggedIn) {
+            if (user.hasAccessToken) {
+                Log.d(TAG, "Loading Access token");
+                Log.d(TAG, getString(R.string.preference_file_key));
+                Log.d(TAG, getString(R.string.saved_access_token));
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                String username = sharedPreferences.getString(getString(R.string.saved_username), "");
+                Log.d(TAG, "Username: " + username);
+                String accessToken = sharedPreferences.getString(getString(R.string.saved_access_token), "");
+                Log.d(TAG, "Access Token: " + accessToken);
+                return accessToken;
+            } else {
+                Log.d(TAG, "No access Token");
+                return "";
+            }
+        } else {
+            Log.d(TAG, "Not logged in");
+            return "";
+        }
+
+    }
+
+
+    private boolean createScheduledSensable(ScheduledSensable scheduledSensable, Sensable sensable) {
         ScheduleHelper scheduleHelper = new ScheduleHelper(getActivity());
 
         Log.d(TAG, "Creating Scheduler");
 
         // Try to create schedule entry
-        if (!scheduleHelper.addSensableToScheduler(sensableSender)) {
+        if (!scheduleHelper.addSensableToScheduler(scheduledSensable)) {
             return false;
         }
 

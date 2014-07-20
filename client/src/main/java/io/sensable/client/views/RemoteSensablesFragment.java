@@ -44,6 +44,7 @@ public class RemoteSensablesFragment extends Fragment {
         super.onStart();
         initialiseList();
         RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint("http://sensable.io")
                 .build();
 

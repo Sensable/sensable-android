@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.util.Log;
 import io.sensable.client.sqlite.ScheduledSensableContentProvider;
 import io.sensable.client.sqlite.ScheduledSensablesTable;
-import io.sensable.model.SensableSender;
+import io.sensable.model.ScheduledSensable;
 
 /**
  * Created by madine on 15/07/14.
@@ -65,8 +65,8 @@ public class ScheduleHelper {
         return true;
     }
 
-    public boolean addSensableToScheduler(SensableSender sensableSender) {
-        ContentValues mNewValues = ScheduledSensablesTable.serializeScheduledSensableForSqlLite(sensableSender);
+    public boolean addSensableToScheduler(ScheduledSensable scheduledSensable) {
+        ContentValues mNewValues = ScheduledSensablesTable.serializeScheduledSensableForSqlLite(scheduledSensable);
 
         Uri mNewUri = context.getContentResolver().insert(
                 ScheduledSensableContentProvider.CONTENT_URI,   // the user dictionary content URI
@@ -75,25 +75,25 @@ public class ScheduleHelper {
         return true;
     }
 
-    public boolean removeSensableFromScheduler(SensableSender sensableSender) {
-        int rowsDeleted = context.getContentResolver().delete(Uri.parse(ScheduledSensableContentProvider.CONTENT_URI + "/" + sensableSender.getId()), null, null);
+    public boolean removeSensableFromScheduler(ScheduledSensable scheduledSensable) {
+        int rowsDeleted = context.getContentResolver().delete(Uri.parse(ScheduledSensableContentProvider.CONTENT_URI + "/" + scheduledSensable.getId()), null, null);
         return (rowsDeleted > 0);
     }
 
-    public boolean setSensablePending(SensableSender sensableSender) {
-        sensableSender.setPending(1);
-        return updateSensableSender(sensableSender);
+    public boolean setSensablePending(ScheduledSensable scheduledSensable) {
+        scheduledSensable.setPending(1);
+        return updateSensableSender(scheduledSensable);
     }
 
-    public boolean unsetSensablePending(SensableSender sensableSender) {
-        sensableSender.setPending(0);
-        return updateSensableSender(sensableSender);
+    public boolean unsetSensablePending(ScheduledSensable scheduledSensable) {
+        scheduledSensable.setPending(0);
+        return updateSensableSender(scheduledSensable);
     }
 
-    private boolean updateSensableSender(SensableSender sensableSender) {
-        ContentValues mNewValues = ScheduledSensablesTable.serializeScheduledSensableForSqlLite(sensableSender);
+    private boolean updateSensableSender(ScheduledSensable scheduledSensable) {
+        ContentValues mNewValues = ScheduledSensablesTable.serializeScheduledSensableForSqlLite(scheduledSensable);
 
-        Uri updateUri = Uri.parse(ScheduledSensableContentProvider.CONTENT_URI + "/" + sensableSender.getId());
+        Uri updateUri = Uri.parse(ScheduledSensableContentProvider.CONTENT_URI + "/" + scheduledSensable.getId());
 
         int rowsUpdated = context.getContentResolver().update(
                 updateUri,   // the user dictionary content URI

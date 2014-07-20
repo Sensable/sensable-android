@@ -20,10 +20,16 @@ public interface SensableService {
     List<Sensable> listSensables();
 
     @POST("/sensable")
-    void saveSample(@Body SensableSender sensableSender, Callback<SampleResponse> cb);
+    void createSensable(@Body Sensable sensable, Callback<SampleResponse> cb);
 
     @POST("/sensable")
-    SampleResponse saveSample(@Body SensableSender sensableSender);
+    SampleResponse createSensable(@Body Sensable sensable);
+
+    @POST("/sensed/{id}")
+    void saveSample(@Path("id") String id, @Body SampleSender sampleSender, Callback<SampleResponse> cb);
+
+    @POST("/sensed/{id}")
+    SampleResponse saveSample(@Path("id") String id, @Body SampleSender sampleSender);
 
     @GET("/sensed/{id}")
     void getSensorData(@Path("id") String id, Callback<Sensable> cb);

@@ -20,7 +20,8 @@ import io.sensable.client.SensorHelper;
 import io.sensable.client.sqlite.ScheduledSensablesTable;
 import io.sensable.model.Sample;
 import io.sensable.model.SampleResponse;
-import io.sensable.model.SensableSender;
+import io.sensable.model.SampleSender;
+import io.sensable.model.ScheduledSensable;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -46,22 +47,22 @@ public class ScheduledSensableService extends Service {
         while (cursor.moveToNext()) {
             Log.d(TAG, "Adding one sampler");
             // Load the sensable from the DB
-            final SensableSender sensableSender = ScheduledSensablesTable.getScheduledSensable(cursor);
+            final ScheduledSensable scheduledSensable = ScheduledSensablesTable.getScheduledSensable(cursor);
 
             // Register the listener on the sensor
             List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ALL);
-            Sensor sensor = sensorManager.getDefaultSensor(sensableSender.getInternalSensorId());
-            sensorManager.registerListener(getListener(sensableSender), sensor, SensorManager.SENSOR_DELAY_NORMAL);
+            Sensor sensor = sensorManager.getDefaultSensor(scheduledSensable.getInternalSensorId());
+            sensorManager.registerListener(getListener(scheduledSensable), sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
             // Mark this sensable as pending
-            scheduleHelper.setSensablePending(sensableSender);
+            scheduleHelper.setSensablePending(scheduledSensable);
         }
         scheduleHelper.stopSchedulerIfNotNeeded();
 
         return START_STICKY;
     }
 
-    private SensorEventListener getListener(final SensableSender sensableSender) {
+    private SensorEventListener getListener(final ScheduledSensable scheduledSensable) {
         return new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -76,28 +77,31 @@ public class ScheduledSensableService extends Service {
 
                 // Create the sample object
                 Sample sample = new Sample();
-
                 sample.setTimestamp((System.currentTimeMillis()));
 
-                // This should parse the sensor type and format the values array differently
+                // TODO: This should parse the sensor type and format the values array differently
                 sample.setValue(event.values[0]);
 
-                /* Location */
+                /* Location needs to be attached to samples once the service supports it */
                 Location lastKnownLocation = getLocation();
                 Log.d(TAG, "Location: " + lastKnownLocation.toString());
 
-                // Update the sendable object
-                sensableSender.setLocation(new double[]{lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude()});
-                sensableSender.setSample(sample);
-                sensableSender.setSensortype(event.sensor.getName());
+                SampleSender sampleSender = new SampleSender();
+                sampleSender.setAccessToken(getUserAccessToken());
+                sampleSender.setSample(sample);
 
-                sensableSender.setInternalSensorId(event.sensor.getType());
-                sensableSender.setUnit(SensorHelper.determineUnit(event.sensor.getType()));
-                sensableSender.setPrivateSensor(false);
-                sensableSender.setAccessToken(getUserAccessToken());
+                // Update the Scheduled object
+                scheduledSensable.setLocation(new double[]{lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude()});
+                scheduledSensable.setSample(sample);
+                scheduledSensable.setSensortype(event.sensor.getName());
+
+                scheduledSensable.setInternalSensorId(event.sensor.getType());
+                scheduledSensable.setUnit(SensorHelper.determineUnit(event.sensor.getType()));
+                scheduledSensable.setPrivateSensor(false);
+                scheduledSensable.setAccessToken(getUserAccessToken());
 
                 Log.d(TAG, "Saving sample: " + event.sensor.getName() + " : " + event.values[0]);
-                service.saveSample(sensableSender, new Callback<SampleResponse>() {
+                service.saveSample(scheduledSensable.getSensorid(), sampleSender, new Callback<SampleResponse>() {
                     @Override
                     public void success(SampleResponse success, Response response) {
                         Log.d(TAG, "Success posting sample");
@@ -109,7 +113,7 @@ public class ScheduledSensableService extends Service {
                     }
                 });
 
-                scheduleHelper.unsetSensablePending(sensableSender);
+                scheduleHelper.unsetSensablePending(scheduledSensable);
 
                 // stop the sensor and service
                 sensorManager.unregisterListener(this);

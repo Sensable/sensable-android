@@ -3,7 +3,7 @@ package io.sensable.client.sqlite;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import io.sensable.model.SensableSender;
+import io.sensable.model.ScheduledSensable;
 
 /**
  * Created by madine on 03/07/14.
@@ -35,26 +35,29 @@ public class ScheduledSensablesTable {
         onCreate(database);
     }
 
-    public static ContentValues serializeScheduledSensableForSqlLite(SensableSender sensableSender) {
+    public static ContentValues serializeScheduledSensableForSqlLite(ScheduledSensable scheduledSensable) {
         ContentValues serializedScheduledSensable = new ContentValues();
-        serializedScheduledSensable.put(COLUMN_SENSABLE_ID, sensableSender.getSensorid());
-        serializedScheduledSensable.put(COLUMN_SENSOR_ID, sensableSender.getInternalSensorId());
-        serializedScheduledSensable.put(COLUMN_SENSOR_TYPE, sensableSender.getSensortype());
-        serializedScheduledSensable.put(COLUMN_UNIT, sensableSender.getUnit());
+        serializedScheduledSensable.put(COLUMN_SENSABLE_ID, scheduledSensable.getSensorid());
+        serializedScheduledSensable.put(COLUMN_SENSOR_ID, scheduledSensable.getInternalSensorId());
+        serializedScheduledSensable.put(COLUMN_SENSOR_TYPE, scheduledSensable.getSensortype());
+        serializedScheduledSensable.put(COLUMN_UNIT, scheduledSensable.getUnit());
         serializedScheduledSensable.put(COLUMN_PENDING, false);
         return serializedScheduledSensable;
     }
 
-    public static SensableSender getScheduledSensable(Cursor cursor) {
-        SensableSender sensableSender = new SensableSender();
-        sensableSender.setId(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_ID)));
-        sensableSender.setSensorid(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSABLE_ID)));
-        sensableSender.setInternalSensorId(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_ID)));
-        sensableSender.setSensortype(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_TYPE)));
-        sensableSender.setUnit(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_UNIT)));
-        sensableSender.setPending(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_PENDING)));
+    public static ScheduledSensable getScheduledSensable(Cursor cursor) {
+        ScheduledSensable scheduledSensable = new ScheduledSensable();
+        int currentIndex = cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_ID);
+        if(currentIndex > -1) {
+            scheduledSensable.setId(cursor.getInt(currentIndex));
+            scheduledSensable.setSensorid(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSABLE_ID)));
+            scheduledSensable.setInternalSensorId(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_ID)));
+            scheduledSensable.setSensortype(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_TYPE)));
+            scheduledSensable.setUnit(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_UNIT)));
+            scheduledSensable.setPending(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_PENDING)));
+        }
 
-        return sensableSender;
+        return scheduledSensable;
     }
 
 }

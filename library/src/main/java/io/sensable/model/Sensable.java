@@ -3,7 +3,6 @@ package io.sensable.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -12,8 +11,12 @@ import java.util.Arrays;
 public class Sensable implements Parcelable {
     private double[] location;
     private String sensorid;
+    private String name;
+    private String sensortype;
     private Sample[] samples;
+    private Sample sample;
     private String unit;
+    private String accessToken;
 
     public Sensable() {
     }
@@ -34,6 +37,22 @@ public class Sensable implements Parcelable {
         this.sensorid = sensorId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSensortype() {
+        return sensortype;
+    }
+
+    public void setSensortype(String sensortype) {
+        this.sensortype = sensortype;
+    }
+
     public Sample[] getSamples() {
         return samples;
     }
@@ -42,12 +61,28 @@ public class Sensable implements Parcelable {
         this.samples = samples;
     }
 
+    public Sample getSample() {
+        return sample;
+    }
+
+    public void setSample(Sample sample) {
+        this.sample = sample;
+    }
+
     public String getUnit() {
         return unit;
     }
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     @Override

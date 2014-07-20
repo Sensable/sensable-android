@@ -3,7 +3,7 @@ package io.sensable.model;
 /**
  * Created by madine on 01/07/14.
  */
-public class SensableSender {
+public class ScheduledSensable {
     private int id;
     private String sensorid;
     private int internalSensorId;
@@ -17,7 +17,7 @@ public class SensableSender {
     // Remove when location is part of sample
     private double[] location;
 
-    public SensableSender() {
+    public ScheduledSensable() {
     }
 
     public String getSensorid() {

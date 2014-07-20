@@ -1,7 +1,6 @@
 package io.sensable.client;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -15,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import io.sensable.client.adapter.TabsPagerAdapter;
-import io.sensable.model.SensableSender;
+import io.sensable.model.ScheduledSensable;
 import io.sensable.model.UserLogin;
 
 /**
@@ -137,7 +136,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 }
             });
         } else if (id == R.id.action_create) {
-            listSensors(this.findViewById(android.R.id.content));
+            createSensable(this.findViewById(android.R.id.content));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -171,13 +170,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     /**
      * Called when the user clicks the Create Sensable menu item
      */
-    public void listSensors(View view) {
+    public void createSensable(View view) {
         FragmentManager fm = getFragmentManager();
         CreateSensableFragment createSensableFragment = new CreateSensableFragment();
         createSensableFragment.setCreateSensableListener(new CreateSensableFragment.CreateSensableListener() {
             @Override
-            public void onConfirmed(SensableSender sensableSender) {
-                Toast.makeText(MainActivity.this, sensableSender.getSensorid(), Toast.LENGTH_SHORT).show();
+            public void onConfirmed(ScheduledSensable scheduledSensable) {
+                Toast.makeText(MainActivity.this, scheduledSensable.getSensorid(), Toast.LENGTH_SHORT).show();
             }
         });
         createSensableFragment.show(fm, "create_sensable_name");

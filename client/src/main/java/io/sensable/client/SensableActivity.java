@@ -25,7 +25,7 @@ import io.sensable.client.sqlite.ScheduledSensablesTable;
 import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.Sample;
 import io.sensable.model.Sensable;
-import io.sensable.model.SensableSender;
+import io.sensable.model.ScheduledSensable;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -121,8 +121,10 @@ public class SensableActivity extends Activity {
                     builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             ScheduleHelper scheduleHelper = new ScheduleHelper(SensableActivity.this);
-                            SensableSender sensableSender = ScheduledSensablesTable.getScheduledSensable(localSender);
-                            scheduleHelper.removeSensableFromScheduler(sensableSender);
+
+                            localSender.moveToFirst();
+                            ScheduledSensable scheduledSensable = ScheduledSensablesTable.getScheduledSensable(localSender);
+                            scheduleHelper.removeSensableFromScheduler(scheduledSensable);
                             deleteLocal.setVisibility(View.GONE);
                             Toast.makeText(SensableActivity.this, "Sensable stopped", Toast.LENGTH_SHORT).show();
                         }
@@ -282,36 +284,34 @@ public class SensableActivity extends Activity {
 
         String thisDayName;
         Calendar cal = Calendar.getInstance();
-        for (int i = 0; i < mSamples.size() - 1; i++) {
+        int i = 0;
+        while(i < mSamples.size()) {
+            int nextDay = -1;
             int currentIndex = currentListList.size() - 1;
             Date thisSampleDate = new Date(mSamples.get(i).getTimestamp());
-            Date nextSampleDate = new Date(mSamples.get(i + 1).getTimestamp());
-
+            if((i+1) < mSamples.size()) {
+                Date nextSampleDate = new Date(mSamples.get(i+1).getTimestamp());
+                cal.setTime(nextSampleDate);
+                nextDay = cal.get(Calendar.DAY_OF_YEAR);
+            }
             cal.setTime(thisSampleDate);
-            Integer thisDay = cal.get(Calendar.DAY_OF_YEAR);
-
-            currentListList.get(currentIndex).add(cal.get(Calendar.YEAR)
+            int thisDay = cal.get(Calendar.DAY_OF_YEAR);
+            thisDayName = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+            String sampleRepresentation = cal.get(Calendar.YEAR)
                     + "-" + cal.get(Calendar.MONTH)
                     + "-" + cal.get(Calendar.DAY_OF_MONTH)
-                    + " " + cal.get(Calendar.HOUR_OF_DAY)
-                    + ":" + cal.get(Calendar.MINUTE)
-                    + "  " + mSamples.get(i).getValue()
-                    + "  " + sensable.getUnit());
+                    + " " + String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
+                    + " | " + mSamples.get(i).getValue()
+                    + "  " + sensable.getUnit();
+            currentListList.get(currentIndex).add(sampleRepresentation);
 
-            cal.setTime(nextSampleDate);
-            int nextDay = cal.get(Calendar.DAY_OF_YEAR);
-            if (thisDay != nextDay) {
-                cal.setTime(thisSampleDate);
-                thisDayName = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+            if(thisDay != nextDay) {
                 listDataHeader.add(thisDayName);
                 listDataChild.put(thisDayName, currentListList.get(currentIndex)); // Header, Child data
                 currentListList.add(new ArrayList<String>());
             }
+            i++;
         }
-        // Add final group
-        thisDayName = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
-        listDataHeader.add(thisDayName);
-        listDataChild.put(thisDayName, currentListList.get(currentListList.size() - 1)); // Header, Child data
 
     }
 }

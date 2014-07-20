@@ -14,7 +14,7 @@ import io.sensable.client.scheduler.ScheduleHelper;
 import io.sensable.client.sqlite.ScheduledSensableContentProvider;
 import io.sensable.client.sqlite.ScheduledSensablesTable;
 import io.sensable.model.Sensable;
-import io.sensable.model.SensableSender;
+import io.sensable.model.ScheduledSensable;
 
 /**
  * Created by simonmadine on 19/07/2014.
@@ -53,12 +53,12 @@ public class LocalSensablesFragment extends Fragment {
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SensableSender sensableSender = ScheduledSensablesTable.getScheduledSensable((Cursor) parent.getItemAtPosition(position));
+                ScheduledSensable scheduledSensable = ScheduledSensablesTable.getScheduledSensable((Cursor) parent.getItemAtPosition(position));
 
                 Intent intent = new Intent(getActivity(), SensableActivity.class);
                 Sensable sensable = new Sensable();
-                sensable.setSensorid(sensableSender.getSensorid());
-                sensable.setUnit(sensableSender.getUnit());
+                sensable.setSensorid(scheduledSensable.getSensorid());
+                sensable.setUnit(scheduledSensable.getUnit());
 
                 intent.putExtra(EXTRA_SENSABLE, sensable);
                 startActivity(intent);
