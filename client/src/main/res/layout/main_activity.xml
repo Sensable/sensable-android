@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+                                   android:id="@+id/pager"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="match_parent">
+</android.support.v4.view.ViewPager>
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+              <!--android:id="@+id/main_activity"-->
+              <!--android:orientation="vertical"-->
+              <!--android:layout_width="match_parent"-->
+              <!--android:layout_height="match_parent">-->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/main_activity"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    <!--&lt;!&ndash;<fragment&ndash;&gt;-->
+            <!--&lt;!&ndash;android:name="io.sensable.client.views.FavouriteSensablesFragment"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/favourite_sensables_fragment"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;></fragment>&ndash;&gt;-->
+    <!--&lt;!&ndash;<fragment&ndash;&gt;-->
+            <!--&lt;!&ndash;android:name="io.sensable.client.views.LocalSensablesFragment"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/local_sensables_fragment"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;></fragment>&ndash;&gt;-->
+    <!--&lt;!&ndash;<fragment&ndash;&gt;-->
+            <!--&lt;!&ndash;android:name="io.sensable.client.views.RemoteSensablesFragment"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/remote_sensables_fragment"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;></fragment>&ndash;&gt;-->
 
-    <!--<fragment-->
-            <!--android:name="io.sensable.client.views.FavouriteSensablesFragment"-->
-            <!--android:id="@+id/favourite_sensables_fragment"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_width="match_parent"-->
-            <!--></fragment>-->
-    <!--<fragment-->
-            <!--android:name="io.sensable.client.views.LocalSensablesFragment"-->
-            <!--android:id="@+id/local_sensables_fragment"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_width="match_parent"-->
-            <!--></fragment>-->
-    <fragment
-            android:name="io.sensable.client.views.RemoteSensablesFragment"
-            android:id="@+id/remote_sensables_fragment"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            ></fragment>
-
-</LinearLayout>
+<!--</LinearLayout>-->
