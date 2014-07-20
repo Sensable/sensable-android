@@ -23,7 +23,7 @@ import io.sensable.model.UserLogin;
  */
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
-    private static final String TAG = SavedSensablesActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     public final static String EXTRA_SENSABLE = "io.sensable.sensable";
 
     private ViewPager viewPager;

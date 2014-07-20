@@ -17,6 +17,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import io.sensable.SensableService;
+import io.sensable.client.adapter.ExpandableListAdapter;
 import io.sensable.client.scheduler.ScheduleHelper;
 import io.sensable.client.sqlite.SavedSensablesTable;
 import io.sensable.client.sqlite.ScheduledSensableContentProvider;
@@ -60,7 +61,7 @@ public class SensableActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensable);
         Intent intent = getIntent();
-        sensable = (Sensable) intent.getParcelableExtra(SensablesListActivity.EXTRA_SENSABLE);
+        sensable = (Sensable) intent.getParcelableExtra(MainActivity.EXTRA_SENSABLE);
 
         sensableId = (TextView) findViewById(R.id.sensable_id_field);
         sensableUnit = (TextView) findViewById(R.id.sensable_unit_field);

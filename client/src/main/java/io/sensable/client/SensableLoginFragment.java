@@ -41,10 +41,6 @@ public class SensableLoginFragment extends DialogFragment {
         return view;
     }
 
-    public SensableLoginListener getRecipientPickerListener() {
-        return sensableLoginListener;
-    }
-
     public void setSensableLoginListener(SensableLoginListener sensableLoginListener) {
         this.sensableLoginListener = sensableLoginListener;
     }

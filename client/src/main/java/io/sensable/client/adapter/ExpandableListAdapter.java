@@ -1,4 +1,4 @@
-package io.sensable.client;
+package io.sensable.client.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+import io.sensable.client.R;
 
 import java.util.HashMap;
 import java.util.List;

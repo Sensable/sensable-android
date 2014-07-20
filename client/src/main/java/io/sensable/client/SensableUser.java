@@ -9,13 +9,11 @@ import io.sensable.model.UserLogin;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
-import retrofit.client.Header;
 import retrofit.client.Response;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.util.List;
 
 /**
  * Created by simonmadine on 12/07/2014.
@@ -27,7 +25,6 @@ public class SensableUser {
     private User mUser;
     public boolean loggedIn = false;
     public boolean hasAccessToken = false;
-    private String sessionId;
 
     private SensableService service;
     private SharedPreferences sharedPreferences;
@@ -84,9 +81,6 @@ public class SensableUser {
 
                 mUser.setUsername(user.getUsername());
 
-                //TODO: Get rid of this once the service uses short-lived accessTokens instead of cookies.
-                extractSessionId(response.getHeaders());
-
                 loggedIn = true;
 
                 //TODO: Get rid of this once login returns user details by default
@@ -102,18 +96,6 @@ public class SensableUser {
                 Log.e(TAG, "Login callback failure" + retrofitError.toString());
             }
         });
-    }
-
-    private void extractSessionId(List<Header> headers) {
-        String cookieString = "";
-        for (int i = 0; i < headers.size(); i++) {
-            if (headers.get(i).getName() == "Set-Cookie") {
-                cookieString = headers.get(i).getValue();
-                if (cookieString.startsWith("connect.sid=")) {
-                    sessionId = cookieString.substring(12, cookieString.length() - 1);
-                }
-            }
-        }
     }
 
     public void userSettings() {
