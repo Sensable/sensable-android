@@ -80,13 +80,20 @@ public class SensableUser {
                 Log.d(TAG, "Login Callback Success:" + user.getUsername());
 
                 mUser.setUsername(user.getUsername());
+                mUser.setEmail(user.getEmail());
+
+
 
                 loggedIn = true;
 
-                //TODO: Get rid of this once login returns user details by default
-                userSettings();
-
-                saveUserToPreferences();
+                String accessToken = user.getAccessToken();
+                if (accessToken != null) {
+                    mUser.setAccessToken(accessToken);
+                    hasAccessToken = true;
+                    saveUserToPreferences();
+                } else {
+                    userSettings();
+                }
 
                 cb.loginStatusUpdate(loggedIn);
             }

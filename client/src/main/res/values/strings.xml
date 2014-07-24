@@ -33,5 +33,18 @@
     <string name="text_stop">Stop</string>
     <string name="title_app">Sensables</string>
     <string name="action_create">Create Sensable</string>
+    <string name="title_activity_about">About Sensables</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="about_text"><![CDATA[
+<h2>Sensables: Make Sense</h2>
+<p>Sensables are any kind of sensor that can transmit data to <a href="http://sensable.io/">sensable.io</a></p>
+<p>This app lets you use the sensors in your Android device exactly the same as a hardware sensor and report samples to your account on sensable.io. Samples are taken every 15 minutes.</p>
+<h2>Icon attribution</h2>
+<p>Drop designed by Arthur Shlain from the Noun Project</p>
+<p>Microphone designed by John Caserta from the Noun Project</p>
+<p>Gyroscope designed by Arthur Shlain from the Noun Project</p>
+<p>Apple designed by Fabien Jouin from the Noun Project</p>
+<p>Speedometer designed by Michael Zenaty from the Noun Project</p>
+]]></string>
 
 </resources>

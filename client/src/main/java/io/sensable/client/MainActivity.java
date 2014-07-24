@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -121,7 +122,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_login) {
+        if (id == R.id.action_about) {
+            launchAbout();
+        } else if (id == R.id.action_login) {
             loginDialog();
         } else if (id == R.id.action_logout) {
             sensableUser.deleteSavedUser(new CallbackInterface() {
@@ -139,6 +142,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             createSensable(this.findViewById(android.R.id.content));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void launchAbout() {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
     }
 
     /**

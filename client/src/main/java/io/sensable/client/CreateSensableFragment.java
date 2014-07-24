@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -101,13 +103,15 @@ public class CreateSensableFragment extends DialogFragment {
                     scheduledSensable.setUnit(SensorHelper.determineUnit(sensorId));
                     scheduledSensable.setPending(0);
 
+                    Location lastKnownLocation = getLocation();
+
                     //Create the bookmarkable object
                     final Sensable sensable = new Sensable();
                     sensable.setSensorid(sensableId.getText().toString());
                     sensable.setUnit(scheduledSensable.getUnit());
                     sensable.setName(sensableId.getText().toString());
                     sensable.setSensortype(sensorSpinner.getSelectedItem().toString());
-                    sensable.setLocation(new double[]{0, 0});
+                    sensable.setLocation(new double[]{lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude()});
                     sensable.setSample(new Sample());
                     sensable.setAccessToken(getUserAccessToken());
 
@@ -215,6 +219,12 @@ public class CreateSensableFragment extends DialogFragment {
             return -1;
         }
         return chosenSensor.getType();
+    }
+
+    private Location getLocation() {
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        return locationManager.getLastKnownLocation(locationProvider);
     }
 
 

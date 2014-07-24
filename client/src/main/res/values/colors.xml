@@ -3,5 +3,5 @@
     <color name="mainBackground">#3498DB</color>
     <color name="titleBackground">#2980b9</color>
     <color name="textColor">#FFFFFF</color>
-    <color name="dialogTextColor">#444444</color>
+    <color name="inverseTextColor">#444444</color>
 </resources>

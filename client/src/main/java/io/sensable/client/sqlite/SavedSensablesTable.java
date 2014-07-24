@@ -16,12 +16,16 @@ public class SavedSensablesTable {
     public static final String COLUMN_LOCATION_LATITUDE = "sensable_latitude";
     public static final String COLUMN_LOCATION_LONGITUDE = "sensable_longitude";
     public static final String COLUMN_SENSOR_ID = "sensable_sensor_id";
+    public static final String COLUMN_SENSOR_TYPE = "sensable_sensor_type";
+    public static final String COLUMN_NAME = "sensable_sensor_name";
     public static final String COLUMN_UNIT = "sensable_unit";
 
     private static final String DATABASE_CREATE = "create table " + NAME + "(" + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_LOCATION_LATITUDE + " real not null, "
             + COLUMN_LOCATION_LONGITUDE + " real not null, "
             + COLUMN_SENSOR_ID + " text unique not null, "
+            + COLUMN_SENSOR_TYPE + " text, "
+            + COLUMN_NAME + " text, "
             + COLUMN_UNIT + " text not null"
             + ");";
 
@@ -41,6 +45,8 @@ public class SavedSensablesTable {
         serializedSensable.put(COLUMN_LOCATION_LATITUDE, sensable.getLocation()[0]);
         serializedSensable.put(COLUMN_LOCATION_LONGITUDE, sensable.getLocation()[1]);
         serializedSensable.put(COLUMN_SENSOR_ID, sensable.getSensorid());
+        serializedSensable.put(COLUMN_SENSOR_TYPE, sensable.getSensortype());
+        serializedSensable.put(COLUMN_NAME, sensable.getName());
         serializedSensable.put(COLUMN_UNIT, sensable.getUnit());
         return serializedSensable;
     }
@@ -50,6 +56,8 @@ public class SavedSensablesTable {
         sensable.setLocation(new double[]{cursor.getDouble(cursor.getColumnIndex(SavedSensablesTable.COLUMN_LOCATION_LATITUDE)), cursor.getDouble(cursor.getColumnIndex(SavedSensablesTable.COLUMN_LOCATION_LONGITUDE))});
         sensable.setSensorid(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_SENSOR_ID)));
         sensable.setUnit(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_UNIT)));
+        sensable.setSensortype(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_SENSOR_TYPE)));
+        sensable.setName(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_NAME)));
         sensable.setSamples(new Sample[]{});
 
         return sensable;

@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +21,11 @@ import io.sensable.model.Sensable;
 /**
  * Created by simonmadine on 19/07/2014.
  */
-public class FavouriteSensablesFragment extends Fragment {
+public class FavouriteSensablesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = FavouriteSensablesFragment.class.getSimpleName();
     public final static String EXTRA_SENSABLE = "io.sensable.sensable";
+
+    SensableListAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +43,8 @@ public class FavouriteSensablesFragment extends Fragment {
         scheduleHelper.startScheduler();
 
         final ListView sensableList = (ListView) getView().findViewById(R.id.saved_sensable_list);
-        attachDatabaseToList(sensableList);
+        attachCursorLoader(sensableList);
+
         final TextView emptyFavouriteText = (TextView) getView().findViewById(R.id.text_no_favourite);
         sensableList.setEmptyView(emptyFavouriteText);
 
@@ -59,31 +65,49 @@ public class FavouriteSensablesFragment extends Fragment {
         };
     }
 
-    private void attachDatabaseToList(ListView listView) {
-        // Get a cursor with all people
-        Cursor c = getActivity().getContentResolver().query(SensableContentProvider.CONTENT_URI,
-                SENSABLE_PROJECTION, null, null, null);
-        getActivity().startManagingCursor(c);
-
-        ListAdapter adapter = new SimpleCursorAdapter(getActivity(),
-                // Use a template that displays a text view
-                android.R.layout.simple_list_item_1,
-                // Give the cursor to the list adapter
-                c,
-                // Map the NAME column in the people database to...
-                new String[]{SavedSensablesTable.COLUMN_SENSOR_ID},
-                // The "text1" view defined in the XML template
-                new int[]{android.R.id.text1});
-        listView.setAdapter(adapter);
-    }
-
     private static final String[] SENSABLE_PROJECTION = new String[]{
             SavedSensablesTable.COLUMN_ID,
             SavedSensablesTable.COLUMN_SENSOR_ID,
+            SavedSensablesTable.COLUMN_SENSOR_TYPE,
+            SavedSensablesTable.COLUMN_NAME,
             SavedSensablesTable.COLUMN_LOCATION_LATITUDE,
             SavedSensablesTable.COLUMN_LOCATION_LONGITUDE,
             SavedSensablesTable.COLUMN_UNIT
     };
 
+    private void attachCursorLoader(ListView listView) {
+        String[] fromColumns = {SavedSensablesTable.COLUMN_SENSOR_ID};
+        int[] toViews = {android.R.id.text1}; // The TextView in simple_list_item_1
+        mAdapter = new SensableListAdapter(getActivity(),
+                R.id.row_sensable_id, null);
+        listView.setAdapter(mAdapter);
 
+        // Prepare the loader.  Either re-connect with an existing one,
+        // or start a new one.
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Now create and return a CursorLoader that will take care of
+        // creating a Cursor for the data being displayed.
+        return new CursorLoader(getActivity(), SensableContentProvider.CONTENT_URI,
+                SENSABLE_PROJECTION, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Swap the new cursor in.  (The framework will take care of closing the
+        // old cursor once we return.)
+
+        mAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // This is called when the last Cursor provided to onLoadFinished()
+        // above is about to be closed.  We need to make sure we are no
+        // longer using it.
+        mAdapter.swapCursor(null);
+    }
 }

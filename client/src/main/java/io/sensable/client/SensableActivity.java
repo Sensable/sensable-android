@@ -160,6 +160,7 @@ public class SensableActivity extends Activity {
             @Override
             public void success(Sensable sensable, Response response) {
                 Log.d(TAG, "Callback Success - Sensable");
+                updateSensable(sensable);
                 updateView(sensable);
             }
 
@@ -171,6 +172,7 @@ public class SensableActivity extends Activity {
     }
 
     public void updateView(Sensable sensable) {
+
         sensableId.setText(sensable.getSensorid());
 
         sensableUnit.setText(sensable.getUnit());
@@ -182,6 +184,15 @@ public class SensableActivity extends Activity {
         prepareListData();
         mExpandableListAdapter.notifyDataSetChanged();
         updateSaveButton();
+    }
+
+    private void updateSensable(Sensable sensable) {
+        this.sensable.setName(sensable.getName());
+        this.sensable.setSensorid(sensable.getSensorid());
+        this.sensable.setLocation(sensable.getLocation());
+        this.sensable.setSensortype(sensable.getSensortype());
+        this.sensable.setSamples(sensable.getSamples());
+        this.sensable.setUnit(sensable.getUnit());
     }
 
 
