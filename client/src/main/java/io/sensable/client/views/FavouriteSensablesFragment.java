@@ -76,10 +76,14 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     };
 
     private void attachCursorLoader(ListView listView) {
-        String[] fromColumns = {SavedSensablesTable.COLUMN_SENSOR_ID};
-        int[] toViews = {android.R.id.text1}; // The TextView in simple_list_item_1
-        mAdapter = new SensableListAdapter(getActivity(),
-                R.id.row_sensable_id, null);
+        SensableListAdapter.AdapterHolder projection = new SensableListAdapter.AdapterHolder();
+        projection.ID = SavedSensablesTable.COLUMN_ID;
+        projection.NAME = SavedSensablesTable.COLUMN_NAME;
+        projection.SENSOR_ID = SavedSensablesTable.COLUMN_SENSOR_ID;
+        projection.TYPE = SavedSensablesTable.COLUMN_SENSOR_TYPE;
+        projection.UNIT = SavedSensablesTable.COLUMN_UNIT;
+
+        mAdapter = new SensableListAdapter(getActivity(), R.id.row_sensable_id, null, projection);
         listView.setAdapter(mAdapter);
 
         // Prepare the loader.  Either re-connect with an existing one,

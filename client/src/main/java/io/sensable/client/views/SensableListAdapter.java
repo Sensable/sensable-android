@@ -3,9 +3,11 @@ package io.sensable.client.views;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,19 +21,23 @@ import java.util.Random;
  * Created by simonmadine on 23/07/2014.
  */
 public class SensableListAdapter extends CursorAdapter {
+    private static final String TAG = SensableListAdapter.class.getSimpleName();
 
     Context context;
     int layoutResourceId;
     Cursor cursor;
     private final LayoutInflater mInflater;
+    private AdapterHolder projection;
 
-    public SensableListAdapter(Context context, int layoutResourceId, Cursor cursor) {
+
+    public SensableListAdapter(Context context, int layoutResourceId, Cursor cursor, AdapterHolder projection) {
         super(context, cursor, FLAG_REGISTER_CONTENT_OBSERVER);
 
         this.mInflater = LayoutInflater.from(context);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.cursor = cursor;
+        this.projection = projection;
     }
 
     @Override
@@ -48,14 +54,19 @@ public class SensableListAdapter extends CursorAdapter {
         TextView value = (TextView) view.findViewById(R.id.row_sensable_sample_value);
         TextView unit = (TextView) view.findViewById(R.id.row_sensable_sample_unit);
 
-        name.setText(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_NAME)));
-        sensorId.setText(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_SENSOR_ID)));
-        sensorType.setImageResource(SensorHelper.determineImage(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_SENSOR_TYPE))));
+        if(cursor.getColumnIndex(projection.NAME) == -1) {
+            name.setText("");
+        } else {
+            name.setText(cursor.getString(cursor.getColumnIndex(projection.NAME)));
+        }
+
+        sensorId.setText(cursor.getString(cursor.getColumnIndex(projection.SENSOR_ID)));
+        sensorType.setImageResource(SensorHelper.determineImage(cursor.getString(cursor.getColumnIndex(projection.TYPE))));
         value.setText("52");
 //        value.setText(sensable.getSensorid());
-        unit.setText(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_UNIT)));
+        unit.setText(cursor.getString(cursor.getColumnIndex(projection.UNIT)));
 
-        view.setBackgroundColor(getColour(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_SENSOR_ID)) + cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_ID))));
+        view.setBackgroundColor(getColour(cursor.getString(cursor.getColumnIndex(projection.SENSOR_ID)) + cursor.getString(cursor.getColumnIndex(projection.ID))));
 
     }
 
@@ -74,5 +85,13 @@ public class SensableListAdapter extends CursorAdapter {
         };
         return colors[rnd.nextInt(colors.length-1)];
 
+    }
+
+    static class AdapterHolder {
+        String ID;
+        String NAME;
+        String SENSOR_ID;
+        String TYPE;
+        String UNIT;
     }
 }

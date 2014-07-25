@@ -99,6 +99,7 @@ public class CreateSensableFragment extends DialogFragment {
                     final ScheduledSensable scheduledSensable = new ScheduledSensable();
                     scheduledSensable.setSensorid(sensableId.getText().toString());
                     scheduledSensable.setInternalSensorId(sensorId);
+                    scheduledSensable.setName(sensableId.getText().toString());
                     scheduledSensable.setSensortype(sensorSpinner.getSelectedItem().toString());
                     scheduledSensable.setUnit(SensorHelper.determineUnit(sensorId));
                     scheduledSensable.setPending(0);

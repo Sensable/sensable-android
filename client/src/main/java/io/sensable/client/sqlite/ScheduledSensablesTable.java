@@ -14,6 +14,7 @@ public class ScheduledSensablesTable {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_SENSABLE_ID = "scheduled_sensable_id";
     public static final String COLUMN_SENSOR_ID = "scheduled_sensor_id";
+    public static final String COLUMN_SENSOR_NAME = "scheduled_sensor_name";
     public static final String COLUMN_SENSOR_TYPE = "scheduled_type";
     public static final String COLUMN_UNIT = "scheduled_unit";
     public static final String COLUMN_PENDING = "scheduled_pending";
@@ -21,6 +22,7 @@ public class ScheduledSensablesTable {
     private static final String DATABASE_CREATE = "create table " + NAME + "(" + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_SENSABLE_ID + " text unique not null, "
             + COLUMN_SENSOR_ID + " int not null, "
+            + COLUMN_SENSOR_NAME + " text, "
             + COLUMN_SENSOR_TYPE + " text not null, "
             + COLUMN_UNIT + " text not null, "
             + COLUMN_PENDING + " int not null" + ");";
@@ -39,6 +41,7 @@ public class ScheduledSensablesTable {
         ContentValues serializedScheduledSensable = new ContentValues();
         serializedScheduledSensable.put(COLUMN_SENSABLE_ID, scheduledSensable.getSensorid());
         serializedScheduledSensable.put(COLUMN_SENSOR_ID, scheduledSensable.getInternalSensorId());
+        serializedScheduledSensable.put(COLUMN_SENSOR_NAME, scheduledSensable.getName());
         serializedScheduledSensable.put(COLUMN_SENSOR_TYPE, scheduledSensable.getSensortype());
         serializedScheduledSensable.put(COLUMN_UNIT, scheduledSensable.getUnit());
         serializedScheduledSensable.put(COLUMN_PENDING, false);
@@ -52,6 +55,7 @@ public class ScheduledSensablesTable {
             scheduledSensable.setId(cursor.getInt(currentIndex));
             scheduledSensable.setSensorid(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSABLE_ID)));
             scheduledSensable.setInternalSensorId(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_ID)));
+            scheduledSensable.setName(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_NAME)));
             scheduledSensable.setSensortype(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_TYPE)));
             scheduledSensable.setUnit(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_UNIT)));
             scheduledSensable.setPending(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_PENDING)));

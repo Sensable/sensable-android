@@ -85,6 +85,7 @@ public class ScheduledSensableService extends Service {
                 /* Location needs to be attached to samples once the service supports it */
                 Location lastKnownLocation = getLocation();
                 Log.d(TAG, "Location: " + lastKnownLocation.toString());
+                sample.setLocation(new double[]{lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude()});
 
                 SampleSender sampleSender = new SampleSender();
                 sampleSender.setAccessToken(getUserAccessToken());

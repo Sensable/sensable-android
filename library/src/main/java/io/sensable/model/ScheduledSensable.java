@@ -4,13 +4,14 @@ package io.sensable.model;
  * Created by madine on 01/07/14.
  */
 public class ScheduledSensable {
-    private int id;
-    private String sensorid;
-    private int internalSensorId;
-    private String sensortype;
-    private String unit;
-    private int pending;
-    private Sample sample;
+    private int id;                 // Internal DB ID
+    private String sensorid;        // Sensables ID
+    private String name;            // Sensables name
+    private int internalSensorId;   // Reference to sensor hardware
+    private String sensortype;      // Type of Sensor
+    private String unit;            // Unit of Sensor
+    private int pending;            // Are we waiting for a sample to be taken?
+    private Sample sample;          // Latest Sample
     private boolean privateSensor;
     private String accessToken;
 
@@ -26,6 +27,14 @@ public class ScheduledSensable {
 
     public void setSensorid(String sensorid) {
         this.sensorid = sensorid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getInternalSensorId() {
