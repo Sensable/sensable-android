@@ -193,6 +193,7 @@ public class SensableActivity extends Activity {
         this.sensable.setSensortype(sensable.getSensortype());
         this.sensable.setSamples(sensable.getSamples());
         this.sensable.setUnit(sensable.getUnit());
+        updateSensableInDatabase();
     }
 
 
@@ -210,7 +211,23 @@ public class SensableActivity extends Activity {
             savedLocally = true;
             updateSaveButton();
         }
+    }
 
+    private boolean updateSensableInDatabase() {
+        savedLocally = checkSavedLocally();
+        if(savedLocally) {
+            ContentValues mNewValues = SavedSensablesTable.serializeSensableForSqlLite(sensable);
+
+            int rowsUpdated = getContentResolver().update(
+                    getDatabaseUri(),   // the user dictionary content URI
+                    mNewValues,                          // the values to insert
+                    null,
+                    new String[]{}
+            );
+            return rowsUpdated > 0;
+        } else {
+            return false;
+        }
     }
 
     private void unsaveThisSensable() {

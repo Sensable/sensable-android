@@ -1,5 +1,9 @@
 package io.sensable.model;
 
+import android.util.Log;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by madine on 01/07/14.
  */
@@ -93,20 +97,20 @@ public class ScheduledSensable {
         this.accessToken = accessToken;
     }
 
-//    public double[] getLocation() {
-//        if (this.sample == null) {
-//            this.sample = new Sample();
-//        }
-//        return this.sample.getLocation();
-//    }
-//
-//    public void setLocation(double[] location) {
-//        if (this.sample == null) {
-//            this.sample = new Sample();
-//        }
-//        this.sample.setLocation(location);
-//
-//    }
+    public double[] getLocation() {
+        if (this.sample == null) {
+            this.sample = new Sample();
+        }
+        return this.sample.getLocation();
+    }
+
+    public void setLocation(double[] location) {
+        if (this.sample == null) {
+            this.sample = new Sample();
+        }
+        this.sample.setLocation(location);
+
+    }
 
     public int getId() {
         return id;
@@ -116,11 +120,22 @@ public class ScheduledSensable {
         this.id = id;
     }
 
-    public double[] getLocation() {
-        return location;
+//    public double[] getLocation() {
+//        return location;
+//    }
+
+//    public void setLocation(double[] location) {
+//        this.location = location;
+//    }
+
+    public String getSampleAsJsonString() {
+        if(this.sample != null) {
+            Log.d("ScheduledSensable", this.sample.toJson().toString());
+            return this.sample.toJson().toString();
+        } else {
+            Log.d("ScheduledSensable", new Sample().toJson().toString());
+            return new Sample().toJson().toString();
+        }
     }
 
-    public void setLocation(double[] location) {
-        this.location = location;
-    }
 }

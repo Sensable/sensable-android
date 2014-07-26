@@ -31,7 +31,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private ActionBar actionBar;
 
     // Tab titles
-    private String[] tabs = { "Favourites", "Local", "Remote" };
+    private String[] tabs = {"Favourites", "Local", "Remote"};
 
     public SensableUser sensableUser;
 

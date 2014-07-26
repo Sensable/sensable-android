@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import io.sensable.client.sqlite.SavedSensablesTable;
 import io.sensable.client.sqlite.ScheduledSensableContentProvider;
 import io.sensable.client.sqlite.ScheduledSensablesTable;
+import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.ScheduledSensable;
+import io.sensable.model.Sensable;
 
 /**
  * Created by madine on 15/07/14.
@@ -101,7 +104,35 @@ public class ScheduleHelper {
                 null,
                 new String[]{}
         );
+        // Copy this sample over to the favourite object if there is one
+        updateFavouriteIfAvailable(scheduledSensable);
+
         return rowsUpdated > 0;
+    }
+
+    private boolean updateFavouriteIfAvailable(ScheduledSensable scheduledSensable) {
+
+        Uri favouriteUri = Uri.parse(SensableContentProvider.CONTENT_URI + "/" + scheduledSensable.getSensorid());
+        Cursor count = context.getContentResolver().query(favouriteUri, new String[]{"*"}, null, null, null, null);
+
+        // If this is also favourited
+        if(count.getCount() > 0) {
+            Sensable sensable = new Sensable();
+            sensable.setSensorid(scheduledSensable.getSensorid());
+            sensable.setSample(scheduledSensable.getSample());
+            ContentValues mNewValues = SavedSensablesTable.serializeSensableWithSingleSampleForSqlLite(sensable);
+            //Update the favourite sample
+            int rowsUpdated = context.getContentResolver().update(
+                    favouriteUri,   // the user dictionary content URI
+                    mNewValues,                          // the values to insert
+                    null,
+                    new String[]{}
+            );
+            return rowsUpdated > 0;
+        } else {
+            return false;
+        }
+
     }
 
 }

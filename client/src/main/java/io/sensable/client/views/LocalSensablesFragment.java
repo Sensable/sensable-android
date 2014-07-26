@@ -81,6 +81,7 @@ public class LocalSensablesFragment extends Fragment implements LoaderManager.Lo
             ScheduledSensablesTable.COLUMN_SENSOR_NAME,
             ScheduledSensablesTable.COLUMN_SENSOR_TYPE,
             ScheduledSensablesTable.COLUMN_PENDING,
+            ScheduledSensablesTable.COLUMN_LAST_SAMPLE,
             ScheduledSensablesTable.COLUMN_UNIT
     };
 
@@ -89,6 +90,7 @@ public class LocalSensablesFragment extends Fragment implements LoaderManager.Lo
         projection.ID = ScheduledSensablesTable.COLUMN_ID;
         projection.NAME = ScheduledSensablesTable.COLUMN_SENSOR_NAME;
         projection.SENSOR_ID = ScheduledSensablesTable.COLUMN_SENSABLE_ID;
+        projection.VALUE = ScheduledSensablesTable.COLUMN_LAST_SAMPLE;
         projection.TYPE = ScheduledSensablesTable.COLUMN_SENSOR_TYPE;
         projection.UNIT = ScheduledSensablesTable.COLUMN_UNIT;
 

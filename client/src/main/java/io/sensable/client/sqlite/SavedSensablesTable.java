@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import io.sensable.model.Sample;
 import io.sensable.model.Sensable;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by madine on 03/07/14.
@@ -18,6 +20,7 @@ public class SavedSensablesTable {
     public static final String COLUMN_SENSOR_ID = "sensable_sensor_id";
     public static final String COLUMN_SENSOR_TYPE = "sensable_sensor_type";
     public static final String COLUMN_NAME = "sensable_sensor_name";
+    public static final String COLUMN_LAST_SAMPLE = "sensable_last_sample";
     public static final String COLUMN_UNIT = "sensable_unit";
 
     private static final String DATABASE_CREATE = "create table " + NAME + "(" + COLUMN_ID + " integer primary key autoincrement, "
@@ -26,6 +29,7 @@ public class SavedSensablesTable {
             + COLUMN_SENSOR_ID + " text unique not null, "
             + COLUMN_SENSOR_TYPE + " text, "
             + COLUMN_NAME + " text, "
+            + COLUMN_LAST_SAMPLE + " text, "
             + COLUMN_UNIT + " text not null"
             + ");";
 
@@ -47,7 +51,15 @@ public class SavedSensablesTable {
         serializedSensable.put(COLUMN_SENSOR_ID, sensable.getSensorid());
         serializedSensable.put(COLUMN_SENSOR_TYPE, sensable.getSensortype());
         serializedSensable.put(COLUMN_NAME, sensable.getName());
+        serializedSensable.put(COLUMN_LAST_SAMPLE, sensable.getSampleAsJsonString());
         serializedSensable.put(COLUMN_UNIT, sensable.getUnit());
+        return serializedSensable;
+    }
+
+    public static ContentValues serializeSensableWithSingleSampleForSqlLite(Sensable sensable) {
+        ContentValues serializedSensable = new ContentValues();
+        serializedSensable.put(COLUMN_SENSOR_ID, sensable.getSensorid());
+        serializedSensable.put(COLUMN_LAST_SAMPLE, sensable.getSampleAsJsonString());
         return serializedSensable;
     }
 
@@ -57,8 +69,19 @@ public class SavedSensablesTable {
         sensable.setSensorid(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_SENSOR_ID)));
         sensable.setUnit(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_UNIT)));
         sensable.setSensortype(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_SENSOR_TYPE)));
+        if(cursor.getColumnIndex(SavedSensablesTable.COLUMN_LAST_SAMPLE) != -1) {
+            String jsonSample = cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_LAST_SAMPLE));
+            try {
+                JSONObject json = new JSONObject(jsonSample);
+                Sample sample = new Sample(json);
+                sensable.setSamples(new Sample[]{sample});
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            sensable.setSamples(new Sample[]{});
+        }
         sensable.setName(cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_NAME)));
-        sensable.setSamples(new Sample[]{});
 
         return sensable;
     }

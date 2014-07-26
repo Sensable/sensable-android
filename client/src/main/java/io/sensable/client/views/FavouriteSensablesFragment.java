@@ -72,6 +72,7 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
             SavedSensablesTable.COLUMN_NAME,
             SavedSensablesTable.COLUMN_LOCATION_LATITUDE,
             SavedSensablesTable.COLUMN_LOCATION_LONGITUDE,
+            SavedSensablesTable.COLUMN_LAST_SAMPLE,
             SavedSensablesTable.COLUMN_UNIT
     };
 
@@ -80,6 +81,7 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
         projection.ID = SavedSensablesTable.COLUMN_ID;
         projection.NAME = SavedSensablesTable.COLUMN_NAME;
         projection.SENSOR_ID = SavedSensablesTable.COLUMN_SENSOR_ID;
+        projection.VALUE = SavedSensablesTable.COLUMN_LAST_SAMPLE;
         projection.TYPE = SavedSensablesTable.COLUMN_SENSOR_TYPE;
         projection.UNIT = SavedSensablesTable.COLUMN_UNIT;
 

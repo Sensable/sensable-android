@@ -2,6 +2,8 @@ package io.sensable.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -58,6 +60,11 @@ public class Sensable implements Parcelable {
     }
 
     public void setSamples(Sample[] samples) {
+        if(samples.length > 0) {
+            setSample(samples[samples.length-1]);
+        } else {
+            setSample(null);
+        }
         this.samples = samples;
     }
 
@@ -66,6 +73,7 @@ public class Sensable implements Parcelable {
     }
 
     public void setSample(Sample sample) {
+
         this.sample = sample;
     }
 
@@ -131,4 +139,7 @@ public class Sensable implements Parcelable {
     }
 
 
+    public String getSampleAsJsonString() {
+        return this.sample.toJson().toString();
+    }
 }

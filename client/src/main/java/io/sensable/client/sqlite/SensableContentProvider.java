@@ -136,10 +136,10 @@ public class SensableContentProvider extends ContentProvider {
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)) {
                     rowsUpdated = sqlDB.update(SavedSensablesTable.NAME, values,
-                            SavedSensablesTable.COLUMN_ID + "=" + id, null);
+                            SavedSensablesTable.COLUMN_SENSOR_ID + "='" + id + "'", null);
                 } else {
                     rowsUpdated = sqlDB.update(SavedSensablesTable.NAME, values,
-                            SavedSensablesTable.COLUMN_ID + "=" + id + " and "
+                            SavedSensablesTable.COLUMN_SENSOR_ID + "='" + id + "' and "
                                     + selection, selectionArgs);
                 }
                 break;

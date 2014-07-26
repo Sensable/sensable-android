@@ -1,5 +1,6 @@
 package io.sensable.client;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,8 +22,8 @@ import io.sensable.client.sqlite.SavedSensablesTable;
 import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.Sample;
 import io.sensable.model.SampleResponse;
-import io.sensable.model.Sensable;
 import io.sensable.model.ScheduledSensable;
+import io.sensable.model.Sensable;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -113,7 +114,7 @@ public class CreateSensableFragment extends DialogFragment {
                     sensable.setName(sensableId.getText().toString());
                     sensable.setSensortype(sensorSpinner.getSelectedItem().toString());
                     sensable.setLocation(new double[]{lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude()});
-                    sensable.setSample(new Sample());
+                    sensable.setSamples(new Sample[]{});
                     sensable.setAccessToken(getUserAccessToken());
 
                     RestAdapter restAdapter = new RestAdapter.Builder()

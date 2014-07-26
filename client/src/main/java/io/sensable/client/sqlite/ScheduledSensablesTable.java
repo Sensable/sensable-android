@@ -3,7 +3,10 @@ package io.sensable.client.sqlite;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import io.sensable.model.Sample;
 import io.sensable.model.ScheduledSensable;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by madine on 03/07/14.
@@ -16,6 +19,7 @@ public class ScheduledSensablesTable {
     public static final String COLUMN_SENSOR_ID = "scheduled_sensor_id";
     public static final String COLUMN_SENSOR_NAME = "scheduled_sensor_name";
     public static final String COLUMN_SENSOR_TYPE = "scheduled_type";
+    public static final String COLUMN_LAST_SAMPLE = "scheduled_last_sample";
     public static final String COLUMN_UNIT = "scheduled_unit";
     public static final String COLUMN_PENDING = "scheduled_pending";
 
@@ -24,6 +28,7 @@ public class ScheduledSensablesTable {
             + COLUMN_SENSOR_ID + " int not null, "
             + COLUMN_SENSOR_NAME + " text, "
             + COLUMN_SENSOR_TYPE + " text not null, "
+            + COLUMN_LAST_SAMPLE + " text, "
             + COLUMN_UNIT + " text not null, "
             + COLUMN_PENDING + " int not null" + ");";
 
@@ -43,6 +48,7 @@ public class ScheduledSensablesTable {
         serializedScheduledSensable.put(COLUMN_SENSOR_ID, scheduledSensable.getInternalSensorId());
         serializedScheduledSensable.put(COLUMN_SENSOR_NAME, scheduledSensable.getName());
         serializedScheduledSensable.put(COLUMN_SENSOR_TYPE, scheduledSensable.getSensortype());
+        serializedScheduledSensable.put(COLUMN_LAST_SAMPLE, scheduledSensable.getSampleAsJsonString());
         serializedScheduledSensable.put(COLUMN_UNIT, scheduledSensable.getUnit());
         serializedScheduledSensable.put(COLUMN_PENDING, false);
         return serializedScheduledSensable;
@@ -59,6 +65,19 @@ public class ScheduledSensablesTable {
             scheduledSensable.setSensortype(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_TYPE)));
             scheduledSensable.setUnit(cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_UNIT)));
             scheduledSensable.setPending(cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_PENDING)));
+            if(cursor.getColumnIndex(SavedSensablesTable.COLUMN_LAST_SAMPLE) != -1) {
+                String jsonSample = cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_LAST_SAMPLE));
+                try {
+                    JSONObject json = new JSONObject(jsonSample);
+                    Sample sample = new Sample(json);
+                    scheduledSensable.setSample(sample);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Sample sample = new Sample();
+                scheduledSensable.setSample(sample);
+            }
         }
 
         return scheduledSensable;

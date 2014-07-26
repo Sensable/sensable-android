@@ -13,19 +13,24 @@
                 android:id="@+id/row_sensable_type"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                tools:background="@drawable/type_lux"/>
 
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:layout_marginLeft="5dp">
 
             <TextView
                     android:id="@+id/row_sensable_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    tools:text="My Light Sensor"/>
+                    tools:text="My Light Sensor"
+                    android:layout_gravity="left"/>
 
             <TextView
                     style="@style/SensableTextView"
@@ -33,7 +38,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    tools:text="device.sensor-lux-256"/>
+                    tools:text="device.sensor-lux-256"
+                    android:layout_gravity="left"/>
         </LinearLayout>
 
         <View
@@ -46,7 +52,8 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                >
+                android:gravity="center"
+                android:layout_marginRight="5dp">
 
             <TextView
                     android:id="@+id/row_sensable_sample_value"
@@ -62,6 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="long unit name"
+                    android:layout_gravity="right"
                     />
         </LinearLayout>
     </LinearLayout>

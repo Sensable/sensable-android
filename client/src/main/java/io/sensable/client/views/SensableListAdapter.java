@@ -14,7 +14,11 @@ import android.widget.TextView;
 import io.sensable.client.R;
 import io.sensable.client.SensorHelper;
 import io.sensable.client.sqlite.SavedSensablesTable;
+import io.sensable.model.Sample;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 /**
@@ -62,8 +66,17 @@ public class SensableListAdapter extends CursorAdapter {
 
         sensorId.setText(cursor.getString(cursor.getColumnIndex(projection.SENSOR_ID)));
         sensorType.setImageResource(SensorHelper.determineImage(cursor.getString(cursor.getColumnIndex(projection.TYPE))));
-        value.setText("52");
-//        value.setText(sensable.getSensorid());
+
+        try {
+            JSONObject json = new JSONObject(cursor.getString(cursor.getColumnIndex(projection.VALUE)));
+            Sample sample = new Sample(json);
+            DecimalFormat df = new DecimalFormat("#.##");
+            value.setText(df.format(sample.getValue()));
+        } catch (JSONException e) {
+            value.setText("?");
+            e.printStackTrace();
+        }
+
         unit.setText(cursor.getString(cursor.getColumnIndex(projection.UNIT)));
 
         view.setBackgroundColor(getColour(cursor.getString(cursor.getColumnIndex(projection.SENSOR_ID)) + cursor.getString(cursor.getColumnIndex(projection.ID))));
@@ -92,6 +105,7 @@ public class SensableListAdapter extends CursorAdapter {
         String NAME;
         String SENSOR_ID;
         String TYPE;
+        String VALUE;
         String UNIT;
     }
 }
