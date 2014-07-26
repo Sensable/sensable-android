@@ -24,8 +24,8 @@ import io.sensable.client.sqlite.ScheduledSensableContentProvider;
 import io.sensable.client.sqlite.ScheduledSensablesTable;
 import io.sensable.client.sqlite.SensableContentProvider;
 import io.sensable.model.Sample;
-import io.sensable.model.Sensable;
 import io.sensable.model.ScheduledSensable;
+import io.sensable.model.Sensable;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -75,6 +75,8 @@ public class SensableActivity extends Activity {
             sensable.setSamples(new Sample[]{});
         }
         mSamples = new ArrayList<Sample>(Arrays.asList(sensable.getSamples()));
+
+        setTitle(sensable.getName());
 
         // get the listview
         sensableSamples = (ExpandableListView) findViewById(R.id.lvExp);
@@ -215,7 +217,7 @@ public class SensableActivity extends Activity {
 
     private boolean updateSensableInDatabase() {
         savedLocally = checkSavedLocally();
-        if(savedLocally) {
+        if (savedLocally) {
             ContentValues mNewValues = SavedSensablesTable.serializeSensableForSqlLite(sensable);
 
             int rowsUpdated = getContentResolver().update(
@@ -272,26 +274,6 @@ public class SensableActivity extends Activity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.sensable, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     /*
      * Preparing the list data
      */
@@ -313,12 +295,12 @@ public class SensableActivity extends Activity {
         String thisDayName;
         Calendar cal = Calendar.getInstance();
         int i = 0;
-        while(i < mSamples.size()) {
+        while (i < mSamples.size()) {
             int nextDay = -1;
             int currentIndex = currentListList.size() - 1;
             Date thisSampleDate = new Date(mSamples.get(i).getTimestamp());
-            if((i+1) < mSamples.size()) {
-                Date nextSampleDate = new Date(mSamples.get(i+1).getTimestamp());
+            if ((i + 1) < mSamples.size()) {
+                Date nextSampleDate = new Date(mSamples.get(i + 1).getTimestamp());
                 cal.setTime(nextSampleDate);
                 nextDay = cal.get(Calendar.DAY_OF_YEAR);
             }
@@ -333,7 +315,7 @@ public class SensableActivity extends Activity {
                     + "  " + sensable.getUnit();
             currentListList.get(currentIndex).add(sampleRepresentation);
 
-            if(thisDay != nextDay) {
+            if (thisDay != nextDay) {
                 listDataHeader.add(thisDayName);
                 listDataChild.put(thisDayName, currentListList.get(currentIndex)); // Header, Child data
                 currentListList.add(new ArrayList<String>());

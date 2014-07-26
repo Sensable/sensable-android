@@ -10,13 +10,25 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+import io.sensable.SensableService;
 import io.sensable.client.adapter.TabsPagerAdapter;
 import io.sensable.model.ScheduledSensable;
+import io.sensable.model.Sensable;
+import io.sensable.model.Statistics;
 import io.sensable.model.UserLogin;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
+import java.text.NumberFormat;
+import java.util.List;
 
 /**
  * Created by simonmadine on 19/07/2014.

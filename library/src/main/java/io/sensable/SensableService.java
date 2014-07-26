@@ -48,4 +48,10 @@ public interface SensableService {
 
     @GET("/user-settings/{username}")
     User settings(@Path("username") String username);
+
+    @GET("/statistics")
+    void getStatistics(Callback<Statistics> cb);
+
+    @GET("/statistics")
+    Statistics getStatistics();
 }

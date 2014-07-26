@@ -111,8 +111,11 @@ public class Sensable implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDoubleArray(location);
         dest.writeString(sensorid);
+        dest.writeString(name);
+        dest.writeString(sensortype);
         dest.writeParcelableArray(samples, flags);
         dest.writeString(unit);
+
     }
 
     public static final Parcelable.Creator<Sensable> CREATOR = new Parcelable.Creator<Sensable>() {
@@ -128,6 +131,8 @@ public class Sensable implements Parcelable {
     private Sensable(Parcel in) {
         location = in.createDoubleArray();
         sensorid = in.readString();
+        name = in.readString();
+        sensortype = in.readString();
 
         Parcelable[] parcelableArray = in.readParcelableArray(Sample.class.getClassLoader());
         samples = null;
@@ -140,6 +145,9 @@ public class Sensable implements Parcelable {
 
 
     public String getSampleAsJsonString() {
+        if(sample == null) {
+            this.sample = new Sample();
+        }
         return this.sample.toJson().toString();
     }
 }
