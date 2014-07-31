@@ -53,7 +53,7 @@ public class RemoteSensablesFragment extends Fragment {
         service.listSensables(new Callback<List<Sensable>>() {
             @Override
             public void success(List<Sensable> sensables, Response response) {
-                Log.d(TAG, "Callback Success" + sensables.size());
+                Log.d(TAG, "Callback Success " + sensables.size());
                 mSensables.clear();
                 mSensables.addAll(sensables);
                 mListArrayAdapter.notifyDataSetChanged();
@@ -61,7 +61,7 @@ public class RemoteSensablesFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.e(TAG, "Callback failure" + retrofitError.toString());
+                Log.e(TAG, "Callback failure " + retrofitError.toString());
             }
         });
 
