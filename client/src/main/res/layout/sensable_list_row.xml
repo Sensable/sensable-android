@@ -48,20 +48,27 @@
                 android:layout_weight="1"
                 />
 
-        <LinearLayout
+        <RelativeLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="center_vertical|right"
                 android:layout_marginRight="5dp">
 
-            <TextView
+            <io.sensable.client.component.FontFitTextView
                     android:id="@+id/row_sensable_sample_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     tools:text="52"
-                    android:layout_gravity="right"/>
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="false"
+                    android:lineSpacingMultiplier="1"
+                    android:includeFontPadding="false"
+                    android:minHeight="55dp"
+                    android:gravity="center_vertical|right"
+                    android:textStyle="bold"/>
 
             <TextView
                     style="@style/SensableTextView"
@@ -70,7 +77,10 @@
                     android:layout_height="wrap_content"
                     tools:text="long unit name"
                     android:layout_gravity="right"
-                    />
-        </LinearLayout>
+                    android:layout_below="@id/row_sensable_sample_value"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentTop="false"/>
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
