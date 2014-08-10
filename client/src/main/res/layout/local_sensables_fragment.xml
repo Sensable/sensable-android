@@ -11,6 +11,7 @@
             android:text="@string/no_local"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:visibility="gone"
             android:gravity="center"/>
 

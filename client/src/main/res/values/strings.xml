@@ -36,7 +36,6 @@
     <string name="title_activity_about">About Sensables</string>
     <string name="hello_world">Hello world!</string>
     <string name="about_text"><![CDATA[
-<h2>Sensables: Make Sense</h2>
 <p>Sensables are any kind of sensor that can transmit data to <a href="http://sensable.io/">sensable.io</a></p>
 <p>This app lets you use the sensors in your Android device exactly the same as a hardware sensor and report samples to your account on sensable.io. Samples are taken every 15 minutes.</p>
 <h2>Icon attribution</h2>
