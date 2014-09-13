@@ -306,9 +306,10 @@ public class SensableActivity extends Activity {
             }
             cal.setTime(thisSampleDate);
             int thisDay = cal.get(Calendar.DAY_OF_YEAR);
-            thisDayName = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+            int month = (cal.get(Calendar.MONTH) + 1);
+            thisDayName = cal.get(Calendar.YEAR) + "-" + month + "-" + cal.get(Calendar.DAY_OF_MONTH);
             String sampleRepresentation = cal.get(Calendar.YEAR)
-                    + "-" + cal.get(Calendar.MONTH)
+                    + "-" + month
                     + "-" + cal.get(Calendar.DAY_OF_MONTH)
                     + " " + String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
                     + " | " + mSamples.get(i).getValue()
