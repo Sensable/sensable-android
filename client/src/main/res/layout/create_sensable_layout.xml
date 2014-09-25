@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:text="Sensable ID:"
-                android:id="@+id/textView"/>
+                android:id="@+id/textView1"/>
 
         <EditText
                 android:layout_width="0dp"

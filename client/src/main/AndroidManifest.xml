@@ -5,7 +5,7 @@
     android:versionName="1.0.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="20" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -36,32 +36,12 @@
         </provider>
 
         <activity
-            android:name="io.sensable.client.SensablesListActivity"
-            android:label="@string/title_activity_all_sensables" >
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN"/> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
             android:name="io.sensable.client.SensorListActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name="io.sensable.client.SensableActivity"
             android:label="@string/title_activity_sensable" >
-        </activity>
-        <activity
-            android:name="io.sensable.client.SavedSensablesActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_saved_sensables" >
-            <intent-filter>
-
-                <!-- <action android:name="android.intent.action.MAIN"/> -->
-
-
-                <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
-            </intent-filter>
         </activity>
         <activity
             android:name="io.sensable.client.MainActivity"
