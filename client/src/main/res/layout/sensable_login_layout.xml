@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:text="@string/sensable_password"
-                android:id="@+id/textView"/>
+                android:id="@+id/textView1"/>
 
         <EditText
                 android:layout_width="0dp"
